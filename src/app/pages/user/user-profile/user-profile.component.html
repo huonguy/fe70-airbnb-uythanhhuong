@@ -1,0 +1,135 @@
+<app-header [userInput]="userDetails"></app-header>
+<section class="vh-100" style="background-color: #f4f5f7;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col mb-4 mb-lg-0">
+        <div class="card mb-3" style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div
+              class="d-flex flex-column align-items-center justify-content-center col-md-4 gradient-custom text-white"
+              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <div class="profile-pic-wrapper">
+                <div class="pic-holder">
+                  <img id="profilePic" class="pic" src="{{userDetails?.avatar || noAvatar}}">
+
+                  <input class="uploadProfileInput" type="file" name="profile_pic" id="newProfilePhoto" accept="image/*"
+                    style="opacity: 0;" (change)="updateAvatar($event)" />
+                  <label for="newProfilePhoto" class="upload-file-block">
+                    <div class="text-center">
+                      <div class="mb-2">
+                        <i class="fa fa-camera fa-2x"></i>
+                      </div>
+                      <div class="text-uppercase">
+                        Cập nhật ảnh
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <h4>{{userDetails?.name}}</h4>
+            </div>
+            <div class="col-md-8">
+              <div *ngIf="!isUpdatedUser; else showEditProfile" class="card">
+                <div class="card-body p-4">
+                  <h6>Thông tin</h6>
+                  <hr class="mt-0 mb-4">
+                  <a href="#" role="button" (click)="showEditUserForm($event)">
+                    <i class="fa fa-edit"></i> Chỉnh sửa hồ sơ
+                  </a>
+                  <div class="row pt-4">
+                    <div class="col-6 mb-3">
+                      <h6>Email</h6>
+                      <p class="text-muted">{{userDetails?.email}}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Số điện thoại</h6>
+                      <p class="text-muted">{{userDetails?.phone}}</p>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div class="ratings">
+                      <i class="fa fa-star rating-color"></i>
+                      <i class="fa fa-star rating-color"></i>
+                      <i class="fa fa-star rating-color"></i>
+                      <i class="fa fa-star rating-color"></i>
+                      <i class="fa fa-star"></i>
+                    </div>
+                    <h5 class="review-count">2 đánh giá</h5>
+                  </div>
+                  <hr class="my-4">
+                  <a href="#">Đánh giá của bạn</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #showEditProfile>
+  <!-- User profile details card-->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h6>Chỉnh sửa thông tin</h6>
+      <hr class="mt-0 mb-4">
+      <form>
+        <!-- Form Group (ho ten)-->
+        <div class="mb-3">
+          <label class="small mb-1" for="inputName">Họ tên</label>
+          <input class="form-control" id="inputName" type="text" name="name" placeholder=""
+            [(ngModel)]="userDetails.name">
+        </div>
+        <!-- Form Group (email address)-->
+        <div class="mb-3">
+          <label class="small mb-1" for="inputEmail">Email</label>
+          <input class="form-control" id="inputEmail" type="email" name="email" placeholder=""
+            [(ngModel)]="userDetails.email">
+        </div>
+        <!-- Form Row-->
+        <div class="row gx-3 mb-3">
+          <!-- Form Group (phone number)-->
+          <div class="col-md-6">
+            <label class="small mb-1" for="inputPhone">Số điện thoại</label>
+            <input class="form-control" id="inputPhone" type="tel" name="phone" placeholder=""
+              [(ngModel)]="userDetails.phone">
+          </div>
+          <!-- Form Group (birthday)-->
+          <div class="col-md-6">
+            <label class="small mb-1" for="inputBirthday">Ngày sinh</label>
+            <input class="form-control" id="inputBirthday" type="date" name="birthday" placeholder=""
+              [ngModel]="userDetails.birthday | date : 'yyyy-MM-dd'" (ngModelChange)="userDetails.birthday=$event">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="small mb-1" for="inputAddress">Địa chỉ</label>
+          <textarea class="form-control" id="inputAddress" type="address" name="address" placeholder=""
+            [(ngModel)]="userDetails.address"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="small mb-1" for="gender">Giới tính</label><br />
+          <div class="form-check d-inline-block">
+            <input class="form-check-input" type="radio" name="gender" id="genderMale" value="true"
+              [checked]="userDetails.gender" (change)="userDetails.gender=$any($event.target).value">
+            <label class=" form-check-label" for="genderMale">
+              Nam
+            </label>
+          </div>
+          <div class="form-check d-inline-block ms-5">
+            <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="false"
+              [checked]="!userDetails.gender" (change)="userDetails.gender=$any($event.target).value">
+            <label class="form-check-label" for="genderFemale">
+              Nữ
+            </label>
+          </div>
+        </div>
+        <!-- Save changes button-->
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-outline-danger me-2" type="button" (click)="editUserDetails()">Cập nhật</button>
+          <button class="btn btn-outline-danger" type="button" (click)="cancelEditForm()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

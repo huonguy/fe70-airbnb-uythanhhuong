@@ -1,0 +1,80 @@
+.search-item {
+
+  .nav-link {
+    color: black !important;
+  }
+
+  position: relative;
+  height: 100%;
+  width: 25%;
+  border-radius: 50rem;
+  text-align: center;
+  transition: all .1s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04)
+  }
+
+  &:not(:last-of-type):after {
+    position: absolute;
+    content: "";
+    top: 25%;
+    right: 0;
+    height: 50%;
+    border-right: 1px solid #6c757d;
+    opacity: .3;
+  }
+}
+
+.tab-content {
+  width: 70%;
+  margin: 15px auto;
+
+  .tab-pane {
+    width: fit-content;
+  }
+}
+
+:host ::ng-deep .p-calendar .p-datepicker {
+  width: 100% !important;
+  padding: 1.5rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .p-inputnumber-buttons-horizontal .p-inputnumber-input {
+  width: 70px !important;
+}
+
+:host ::ng-deep .p-accordion {
+  display: flex;
+  width: 70%;
+  margin:0 auto;
+}
+
+.diaDiemStyle {
+  border: 1px solid none;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.04);
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host ::ng-deep .p-virtualscroller-content {
+  background: transparent !important;
+}
+
+// :host ::ng-deep .p-virtualscroller-item {
+//   display: flex;
+//   align-items: center;
+// }
+
+// .collapse.in { min-height: 50px;border: 1px solid blue; }
+
+cdk-virtual-scroll-viewport {
+  height: 400px;
+  }

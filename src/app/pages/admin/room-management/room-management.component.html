@@ -1,1 +1,167 @@
-<p>room-management works!</p>
+<p-toast></p-toast>
+<button pButton pRipple label="Thêm phòng" icon="pi pi-plus" class="p-button-success me-2"
+  (click)="addNewRoom()"></button>
+<div class="card mt-4 border-top-0">
+  <p-table #dt [value]="arrRoom" [rows]="10" [paginator]="true" [globalFilterFields]="['name']"
+    responsiveLayout="scroll" [rowHover]="true" dataKey="_id"
+    currentPageReportTemplate="Hiển thị {first} đến {last} trong số {totalRecords} phòng"
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input style="width: 300%;" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Nhập vào tên phòng" />
+      </span>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="_id">Mã phòng <p-sortIcon field="_id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="name">Tên phòng <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th>Hình ảnh</th>
+        <th pSortableColumn="locationId.province">Địa điểm <p-sortIcon field="locationId.province"></p-sortIcon>
+        </th>
+        <th pSortableColumn="guests">Số lượng khách <p-sortIcon field="guests"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ro>
+      <tr>
+        <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="">
+          {{ro._id}}
+        </td>
+        <td>{{ro.name}}</td>
+        <td><img [src]="ro.image" [alt]="" width="100" class="shadow-4" /></td>
+        <td>{{ro.locationId?.name}}<br />
+          <small class="text-muted">{{ro.locationId?.province}}</small>
+        </td>
+        <td>{{ro.guests}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2"
+            (click)="editRoom(ro)"></button>
+          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning"
+            (click)="deleteRoom(ro)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      Tổng cộng có {{arrRoom ? arrRoom.length : 0}} phòng.
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="roomDialog" [style]="{width: '450px'}" header={{headerDialog}} [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <form #roomForm="ngForm" (ngSubmit)="clickRoomAction()">
+      <img [src]="room.image" [alt]="room.image" class="room-image" *ngIf="room.image">
+      <div class="field">
+        <label for="name">Tên</label>
+        <input type="text" pInputText id="name" [(ngModel)]="room.name" required #roomName="ngModel" name="name" />
+        <ng-container *ngIf="roomName.invalid && (roomName.dirty || roomName.touched)">
+          <small class="p-error" *ngIf="roomName.errors?.['required']">
+            Tên phòng không được bỏ trống.
+          </small>
+        </ng-container>
+      </div>
+      <div class="field">
+        <label class="mb-3">Số lượng</label>
+        <div class="formgrid grid">
+          <div class="field col-4">
+            <label for="guests">Khách</label>
+            <p-inputNumber id="guests" [(ngModel)]="room.guests" name="guests"></p-inputNumber>
+          </div>
+          <div class="field col-4">
+            <label for="bedRoom">Phòng ngủ</label>
+            <p-inputNumber id="bedRoom" [(ngModel)]="room.bedRoom" name="bedRoom"></p-inputNumber>
+          </div>
+          <div class="field col-4">
+            <label for="bath">Phòng tắm</label>
+            <p-inputNumber id="bath" [(ngModel)]="room.bath" name="bath"></p-inputNumber>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="description">Mô tả</label>
+        <textarea id="description" pInputTextarea rows="3" cols="50" [(ngModel)]="room.description"
+          name="description"></textarea>
+      </div>
+      <div class="field">
+        <label for="price">Giá tiền</label>
+        <p-inputNumber id="price" [(ngModel)]="room.price" mode="currency" currency="VND" locale="vi" name="price">
+        </p-inputNumber>
+      </div>
+      <div class="field">
+        <label class="mb-3">Tiện nghi</label>
+        <div class="formgrid grid">
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="elevator" name="elevator" [value]=false [(ngModel)]="room.elevator"></p-radioButton>
+            <label for="elevator">Thang máy</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="hotTub" name="hotTub" [value]=false [(ngModel)]="room.hotTub"></p-radioButton>
+            <label for="hotTub">Bồn nước nóng</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="pool" name="pool" [value]=false [(ngModel)]="room.pool"></p-radioButton>
+            <label for="pool">Hồ bơi</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="indoorFireplace" name="indoorFireplace" [value]=false [(ngModel)]="room.indoorFireplace">
+            </p-radioButton>
+            <label for="indoorFireplace">Lò sưởi trong nhà</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="dryer" name="dryer" [value]=false [(ngModel)]="room.dryer"></p-radioButton>
+            <label for="dryer">Máy sấy khô</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="gym" name="gym" [value]=false [(ngModel)]="room.gym"></p-radioButton>
+            <label for="gym">Phòng thể dục</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="kitchen" name="kitchen" [value]=false [(ngModel)]="room.kitchen"></p-radioButton>
+            <label for="kitchen">Nhà bếp</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="wifi" name="wifi" [value]=false [(ngModel)]="room.wifi"></p-radioButton>
+            <label for="wifi">Wifi</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="heating" name="heating" [value]=false [(ngModel)]="room.heating"></p-radioButton>
+            <label for="heating">Máy làm nóng</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="cableTV" name="cableTV" [value]=false [(ngModel)]="room.cableTV"></p-radioButton>
+            <label for="cableTV">Truyền hình cáp</label>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="locationId">Địa điểm</label>
+        <p-dropdown dataKey="name" [options]=" arrLocation" [(ngModel)]="room.locationId" [filter]="true"
+          filterBy="name" [showClear]="true" placeholder="Chọn địa điểm" name="locationId">
+          <ng-template pTemplate="selectedItem">
+            <div *ngIf="room.locationId">
+              <span>{{room.locationId?.name}}</span><br />
+              <small class="text-muted">{{room.locationId?.province}}</small>
+            </div>
+          </ng-template>
+          <ng-template let-location pTemplate="item">
+            <div>
+              <span>{{location.name}}</span><br />
+              <small class="text-muted">{{location.province}}</small>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <button [disabled]="roomForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
+        class="w-50 p-button-text"></button>
+      <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
+    </form>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

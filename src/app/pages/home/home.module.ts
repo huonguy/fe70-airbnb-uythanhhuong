@@ -1,17 +1,32 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 import { HomeLayoutComponent } from './home-layout/home-layout.component';
 import { HeaderComponent } from './_components/header/header.component';
 import { FooterComponent } from './_components/footer/footer.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomDetailComponent } from './room-detail/room-detail.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { CarouselComponent } from './_components/carousel/carousel.component';
+import { RoomSearchComponent } from './_components/room-search/room-search.component';
 
+import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
+//cấu hình route cho /home
+import { RouterModule, Routes } from '@angular/router';
 
+const homeRoutes: Routes = [
+  {
+    path: '', component: HomeLayoutComponent, children: [
+      { path: '', component: HomeComponent },
+      { path: 'roomlist/:locationId', component: RoomListComponent },
+      { path: 'roomdetail/:id', component: RoomDetailComponent }
+    ]
+  }
+]
 
 @NgModule({
   declarations: [
@@ -20,16 +35,21 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     FooterComponent,
     RoomListComponent,
     RoomDetailComponent,
-    LoginComponent,
-    RegisterComponent,
     HomeComponent,
-    UserProfileComponent,
+    CarouselComponent,
+    RoomSearchComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    PrimengModule,
+    ScrollingModule,
+    NgxPaginationModule,
+    RouterModule.forChild(homeRoutes),
   ],
   exports: [
-    HomeLayoutComponent
+    HomeLayoutComponent,
+    HeaderComponent
   ]
 })
 export class HomeModule { }

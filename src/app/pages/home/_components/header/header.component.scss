@@ -1,0 +1,177 @@
+.navbar {
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+
+  .navbar-collapse ul li {
+    margin-right: 1.5rem;
+
+    a{
+      position: relative;
+      transition: all .5s;
+      // color: #fff;
+
+      &::before {
+        content: '';
+        height: 2px;
+        background-color: #fff;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        border-radius: 1px;
+        transform: scaleX(0);
+        width: 6px;
+        transition: all .2s;
+      }
+
+      &.active{
+        &:hover {
+          opacity: 1;
+        }
+
+        &::before {
+          width: 18px;
+          transform: scaleX(1) translateX(-50%);
+        }
+      }
+
+      &:hover {
+        opacity: .5;
+
+        &::before {
+          transform: scaleX(1) translateX(-50%);
+        }
+      }
+    }
+  }
+
+  .blackStyle {
+    color: #000000 !important;
+
+    &::before {
+      background-color: #F7F7F7 !important;
+    }
+  }
+
+  .welcomeGuest, .language {
+    position: relative;
+    color: #fff;
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      background-color: rgba(255,255,255,0.15);
+      border-radius: 22px;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: all .2s;
+    }
+
+    &:hover {
+      &::before {
+        opacity: 1;
+        z-index: -1;
+      }
+    }
+  }
+
+  .uProfileBtn {
+    width: 70px;
+    height: 40px;
+    border-radius: 20px;
+    border: none;
+    padding: 5px 5px 5px 12px;
+  }
+
+  .uProfilePanel {
+    margin-top: 12px;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 5px 0;
+    position: absolute;
+    border-radius: 10px;
+    opacity: 0;
+    transition: all .2s;
+
+    a{
+      color: #000000;
+      cursor: pointer;
+      font-size: .9rem;
+
+      &:hover {
+        background-color: rgba(0,0,0,0.04) !important;
+      }
+    }
+  }
+
+  .isProfileOpened {
+    opacity: 1;
+    z-index: 999;
+  }
+
+}
+
+
+.userBar.navbar-nav{
+  .nav-item{
+    .nav-link {
+      color: #d1d3e2;
+
+      .img-profile {
+        height: 2rem;
+        width: 2rem;
+      }
+
+      &::after {
+        display: none;
+      }
+
+      &:hover {
+        color: #b7b9cc;
+      }
+
+      &:active {
+        color: #858796;
+      }
+    }
+
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+      font-size: 0.85rem;
+
+      .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.25rem 1.5rem;
+        clear: both;
+        font-weight: 400;
+        color: #3a3b45;
+        text-align: inherit;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+
+        &:hover, &:focus {
+          color: #2e2f37;
+          text-decoration: none;
+          background-color: #eaecf4;
+        }
+
+        &:active, &.active {
+          color: #fff;
+          text-decoration: none;
+          background-color: #4e73df;
+        }
+
+        &:disabled, &.disabled {
+          color: #b7b9cc;
+          pointer-events: none;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<p-messages [(value)]="messageContent" [enableService]="false"></p-messages>
+
+<ng-container *ngIf="requestURL.includes('profile'); else otherContent">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<div class="uLayout">
+  <ng-template #otherContent>
+    <div #container class="container" id="container">
+      <div class="form-container sign-in-container">
+        <app-login (eventMessage)=returnMessage($event)></app-login>
+      </div>
+      <div class="form-container sign-up-container">
+        <app-register (eventMessage)=returnMessage($event)></app-register>
+      </div>
+
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>Chào mừng bạn trở lại!</h1>
+            <p>Để giữ kết nối với chúng tôi, vui lòng đăng nhập bằng thông tin cá nhân của bạn</p>
+            <button class="buttonStyle ghost" id="signIn" (click)="signIn()">Đăng nhập</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>Chào, Bạn!</h1>
+            <p>Hãy để lại thông tin cá nhân của bạn và bắt đầu hành trình với chúng tôi</p>
+            <button class="buttonStyle ghost" id="signUp" (click)="signUp()">Đăng ký</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

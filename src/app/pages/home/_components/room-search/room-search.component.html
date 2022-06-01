@@ -1,0 +1,138 @@
+<!-- Room searching -->
+<div class="w-100 position-absolute" style="top:2%; z-index: 99">
+
+  <div id="mySearch">
+    <div class="container rounded-pill bg-light d-flex align-items-center
+    justify-content-center" style="width: 70%; height: 70px">
+      <ng-container *ngIf="getScreenWidth>= 992 ; else RoomSearchInSmallScreen">
+        <ul class="nav nav-tabs w-100 h-100 align-items-center" style="font-size: .8rem;" id="myTab" role="tablist">
+          <li class="nav-item search-item" role="presentation">
+            <button class="p-0 bg-transparent border-0 h-100 w-100" data-bs-toggle="collapse"
+              data-bs-target="#pills-diaDiem">
+              <b>Địa điểm</b>
+              <input type="text" class="w-100 border-0 bg-transparent text-center" placeholder="Bạn sắp đi đâu?"
+                style="outline: none;" [value]="selectedLocation?.name">
+            </button>
+          </li>
+          <li class="nav-item search-item" role="presentation">
+            <button class="bg-transparent border-0 h-100 w-100" data-bs-toggle="collapse"
+              data-bs-target="#pills-nhanPhong">
+              <b>Nhận phòng</b><br />
+              <span class="text-muted">{{checkinDate | date: 'dd/MM/yyyy'}}</span>
+            </button>
+          </li>
+          <li class="nav-item search-item" role="presentation">
+            <button class="nav-link bg-transparent border-0 h-100 w-100" data-bs-toggle="collapse"
+              data-bs-target="#pills-traPhong">
+              <b>Trả phòng</b><br />
+              <span class="text-muted">{{checkoutDate | date: 'dd/MM/yyyy'}}</span>
+            </button>
+          </li>
+          <li class="nav-item search-item" role="presentation" style="display: flex;">
+            <button class="nav-link bg-transparent border-0 h-100 w-100" data-bs-toggle="collapse"
+              data-bs-target="#pills-themKhach">
+              <b>Khách</b><br />
+              <span *ngIf="adultsNum + childrenNum !== 0 || infantsNum!== 0 || petsNum !== 0; else showThemKhach"
+                class="text-muted">
+                {{adultsNum + childrenNum}} khách, {{infantsNum}} sơ sinh, {{petsNum}} thú nuôi
+              </span>
+            </button>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-danger rounded-circle" style="width:
+        50px; height: 50px;" (click)="searchRoom()">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </ng-container>
+    </div>
+
+    <div class="tab-content">
+      <div class="collapse fade bg-light w-50 p-4" style="border-radius: 20px;" id="pills-diaDiem"
+        data-bs-parent="#mySearch">
+        <cdk-virtual-scroll-viewport [itemSize]="10">
+          <button *cdkVirtualFor="let location of arrLocation"
+            class="d-flex border-0 bg-transparent align-items-center mb-3" (click)="chooseLocation(location)">
+            <div class=" diaDiemStyle">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+            </div>
+            <span>{{location.name}}, {{location.province}}</span>
+          </button>
+        </cdk-virtual-scroll-viewport>
+      </div>
+
+      <div class="collapse fade text-center" id="pills-nhanPhong" data-bs-parent="#mySearch">
+        <p-calendar [(ngModel)]="checkinDate" [inline]="true" [showWeek]="true">
+        </p-calendar>
+      </div>
+
+      <div class="collapse fade text-center" id="pills-traPhong" data-bs-parent="#mySearch">
+        <p-calendar [(ngModel)]="checkoutDate" [inline]="true" [showWeek]="true"></p-calendar>
+      </div>
+
+      <div class="collapse fade bg-light w-50 p-5 ms-auto" style="border-radius: 20px;" id="pills-themKhach"
+        data-bs-parent="#mySearch">
+        <div class="d-flex justify-content-between mb-4">
+          <div class="d-flex flex-column align-items-start">
+            <label for="adults">Người lớn</label>
+            <span class="text-muted" style="font-size: .7rem;">Từ 13 tuổi trở lên</span>
+          </div>
+          <p-inputNumber [(ngModel)]="adultsNum" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+            inputId="adults" decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary"
+            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0">
+          </p-inputNumber>
+        </div>
+        <hr style="opacity: .1;" />
+        <div class=" d-flex justify-content-between mb-4">
+          <div class="d-flex flex-column align-items-start">
+            <label for="children">Trẻ em</label>
+            <span class="text-muted" style="font-size: .7rem;">Độ tuổi 2 - 12</span>
+          </div>
+          <p-inputNumber [(ngModel)]="childrenNum" [showButtons]="true" buttonLayout="horizontal"
+            spinnerMode="horizontal" inputId="children" decrementButtonClass="p-button-secondary"
+            incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            [min]="0">
+          </p-inputNumber>
+        </div>
+        <hr style="opacity: .1;" />
+        <div class="d-flex justify-content-between mb-4">
+          <div class="d-flex flex-column align-items-start">
+            <label for="infants">Trẻ sơ sinh</label>
+            <span class="text-muted" style="font-size: .7rem;">Dưới 2 tuổi</span>
+          </div>
+          <p-inputNumber [(ngModel)]="infantsNum" [showButtons]="true" buttonLayout="horizontal"
+            spinnerMode="horizontal" inputId="infants" decrementButtonClass="p-button-secondary"
+            incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            [min]="0">
+          </p-inputNumber>
+        </div>
+        <hr style="opacity: .1;" />
+        <div class="d-flex justify-content-between mb-4">
+          <div class="d-flex flex-column align-items-start">
+            <label for="pets">Thú nuôi</label>
+            <span class="text-muted" style="font-size: .7rem;"><a href="#">Bạn sẽ mang theo động vật phục vụ?</a></span>
+          </div>
+          <p-inputNumber [(ngModel)]="petsNum" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+            inputId="pets" decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary"
+            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0">
+          </p-inputNumber>
+        </div>
+        <div>
+          <span class="text-muted">Nếu bạn may mắn có nhiều hơn 2 thú cưng đi cùng, hãy nhớ cho Chủ nhà biết.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #RoomSearchInSmallScreen>
+  <div class="h-100 w-100 d-flex justify-content-center">
+    <button class="h-100 w-100 border-0 bg-transparent">
+      <i class="fa fa-search text-danger me-3" aria-hidden="true"></i>
+      <span class="fw-bolder">Bạn sắp đi đâu? </span>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #showThemKhach>
+  <span class="text-muted">Thêm khách</span>
+</ng-template>

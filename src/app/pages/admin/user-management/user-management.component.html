@@ -1,1 +1,137 @@
-<p>user-management works!</p>
+<p-toast></p-toast>
+<button pButton pRipple label="Thêm người dùng" icon="pi pi-plus" class="p-button-success me-2"
+  (click)="addNewUser()"></button>
+<div class="card mt-4 border-top-0">
+  <p-table #dt [value]="arrUser" [rows]="10" [paginator]="true" [globalFilterFields]="['name','email']"
+    responsiveLayout="scroll" [rowHover]="true" dataKey="_id"
+    currentPageReportTemplate="Hiển thị {first} đến {last} trong số {totalRecords} người dùng"
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input style="width: 300%;" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Nhập vào email hoặc họ tên người dùng" />
+      </span>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="_id">Mã người dùng <p-sortIcon field="_id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="name">Họ tên <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th>Hình ảnh</th>
+        <th pSortableColumn="type">Vai trò <p-sortIcon field="type"></p-sortIcon>
+        </th>
+        <th pSortableColumn="Email">Email <p-sortIcon field="Email"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-us>
+      <tr>
+        <td>{{us._id}}</td>
+        <td>{{us.name}}</td>
+        <td><img [src]="us.avatar || avatarDefault" [alt]="us.name" width="100" class="shadow-4" /></td>
+        <td>{{us.type}}</td>
+        <td>{{us.email}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2"
+            (click)="editUser(us)"></button>
+          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning"
+            (click)="deleteUser(us)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      Tổng cộng có {{arrUser ? arrUser.length : 0 }} người dùng.
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="userDialog" [style]="{width: '450px'}" header={{headerDialog}} [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <form #userForm="ngForm" (ngSubmit)="clickUserAction()">
+      <img [src]="user.avatar" [alt]="user.avatar" class="user-image" *ngIf="user.avatar">
+      <div class="field">
+        <label for="name">Tên</label>
+        <input type="text" id="name" pInputText [(ngModel)]="user.name" required #userName="ngModel" name="name" />
+        <ng-container *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+          <small class="p-error" *ngIf="userName.errors?.['required']">
+            Tên không được bỏ trống.
+          </small>
+        </ng-container>
+      </div>
+      <div *ngIf="!user._id" class="field">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" pInputText [(ngModel)]="user.password" #password="ngModel" required
+          name="password">
+        <ng-container *ngIf="password.invalid && (password.dirty || password.touched)">
+          <small class="p-error" *ngIf="password.errors?.['required']">
+            Mật khẩu không được bỏ trống.
+          </small>
+        </ng-container>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" pInputText id="email" [(ngModel)]="user.email" required
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" name="email" />
+        <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
+          <small class="p-error" *ngIf="email.errors?.['required']">
+            Email không được bỏ trống.
+          </small>
+          <small class="p-error" *ngIf="email.errors?.['pattern']">
+            Email không đúng định dạng.
+          </small>
+        </ng-container>
+      </div>
+      <div class="field">
+        <label for="phone">Số điện thoại</label>
+        <input type="tel" pInputText id="phone" [(ngModel)]="user.phone" pattern="[0-9]*" #phone="ngModel"
+          name="phone" />
+        <ng-container *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+          <small class="p-error" *ngIf="phone.errors?.['pattern']">
+            Số điện thoại không hợp lệ.
+          </small>
+        </ng-container>
+      </div>
+      <div class="field">
+        <label for="birthday">Ngày sinh</label>
+        <p-calendar inputId="birthday" [ngModel]="user.birthday | date : 'MM/dd/yyyy'"
+          (ngModelChange)="user.birthday=$event" name="birthday">
+        </p-calendar>
+      </div>
+      <div class="field">
+        <label for="address">Địa chỉ</label>
+        <textarea id="address" pInputTextarea [(ngModel)]="user.address" rows="3" cols="50" name="address"></textarea>
+      </div>
+      <div class="field">
+        <label for="type">Vai trò</label>
+        <p-dropdown [(ngModel)]="user.type" inputId="type" [options]="roleList" placeholder="Chọn vai trò" name="type">
+          <ng-template let-option pTemplate="item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="field">
+        <label class="mb-3">Giới tính</label>
+        <div class="formgrid grid">
+          <div class="p-field-radiobutton p-col-6">
+            <p-radioButton id="maleGender" name="gender" [value]=true [(ngModel)]="user.gender">
+            </p-radioButton>
+            <label for="maleGender">Nam</label>
+          </div>
+          <div class="field-radiobutton col-6">
+            <p-radioButton id="femaleGender" name="gender" [value]=false [(ngModel)]="user.gender"></p-radioButton>
+            <label for="femaleGender">Nữ</label>
+          </div>
+        </div>
+      </div>
+      <button [disabled]="userForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
+        class="w-50 p-button-text"></button>
+      <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
+    </form>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

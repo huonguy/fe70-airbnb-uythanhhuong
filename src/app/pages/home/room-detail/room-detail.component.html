@@ -1,1 +1,396 @@
-<p>room-detail works!</p>
+<div class="container p-4">
+  <!-- title -->
+  <div class="row">
+    <h2>{{roomDetail?.name}}</h2>
+    <div class="d-flex justify-content-between py-3">
+      <div class="d-flex">
+        <div>
+          <i class="fa fa-star" aria-hidden="true" style="color: red"></i> 4,63 <a routerLink="."
+            fragment="reviewSection">({{arrReview?.length}} đánh
+            giá)</a> -
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="d-flex flex-column mx-1" style="color: red; font-size: .4rem;">
+            <i class="fa fa-heart" aria-hidden="true"></i>
+            <i class="fa fa-circle" aria-hidden="true"></i>
+          </div>
+          Chủ nhà siêu cấp -
+        </div>
+        <div class="ms-1">
+          <a href="#">Thành phố Vũng Tàu, Bà Rịa - Vũng Tàu, Việt Nam</a>
+        </div>
+      </div>
+      <div>
+        <span class="me-3">
+          <i class="fa fa-upload" aria-hidden="true"></i><a href="#" class="ms-1">Chia sẻ</a>
+        </span>
+        <span>
+          <i class="fa fa-heart-o" aria-hidden="true"></i><a href="#" class="ms-1">Lưu</a>
+        </span>
+      </div>
+    </div>
+  </div>
+  <!-- image -->
+  <div class="img-container-grid">
+    <div class="bigsquare"><img [src]="roomDetail?.image" class="img-grid-c"></div>
+    <div class="bigsquare_blank">
+      <div class="inner_square"><img src="https://picsum.photos/id/195/768/1024" class="img-grid-c">
+      </div>
+      <div class="inner_square"><img src="https://picsum.photos/id/225/1500/979" class="img-grid-c"></div>
+      <div class="inner_square"><img src="https://picsum.photos/id/163/2000/1333" class="img-grid-c"></div>
+      <div class="inner_square"><img src="https://picsum.photos/id/322/5760/3840" class="img-grid-c"></div>
+    </div>
+  </div>
+
+  <!-- detail room -->
+  <div class="row">
+    <div class="col-7 pe-5">
+      <div class="d-flex justify-content-between py-3">
+        <div>
+          <h5>{{roomDetail?.name}}</h5>
+          <p class="text-muted">{{roomDetail?.guests}} khách . {{roomDetail?.bedRoom}} phòng ngủ . {{roomDetail?.bath}}
+            phòng tắm</p>
+        </div>
+        <img [src]="roomDetail?.image" class="rounded-circle" width="50" height="50" alt="..." />
+      </div>
+
+      <hr />
+      <div class="py-3">
+        <div class="d-flex align-items-center pb-3">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+            focusable="false" style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+            <path
+              d="m1.66675 2.67728c0-1.29010774 1.19757945-2.22892485 2.43214873-1.95293212l.14254843.03728562 11.76455284 3.5293665 11.7747926-3.3852093c1.1836744-.3403064 2.3638086.45712676 2.5321485 1.63303369l.0152796.14287691.0051793.1462187v23.09468c0 .8279727-.5091718 1.5640524-1.2698418 1.8619846l-.155411.0536419-12.6207 3.7862c-.1499506.0449851-.3078242.0539821-.4609439.026991l-.1137505-.026991-12.62071315-3.786204c-.79308169-.2379357-1.35183119-.937138-1.41857691-1.7513494l-.00671274-.1642731zm1.99999664.00000464v23.24528886l12.33325336 3.6994265 12.3334-3.6994076v-23.0946724l-12.0569924 3.46639925c-.1474472.0423911-.3021582.05014891-.4521925.02334213l-.1114623-.02658488zm21.66607876 17.47821536v2.088l-9.333 2.8v-2.087zm0-6v2.088l-9.333 2.8v-2.087zm0-5.999v2.087l-9.333 2.8v-2.087z">
+            </path>
+          </svg>
+          <p class="ms-2 mb-0">
+            Toàn bộ nhà <br /> <span class="text-muted">Bạn sẽ có chung cư cao cấp cho riêng mình.</span>
+          </p>
+        </div>
+        <div class="d-flex align-items-center pb-3">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+            focusable="false" style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+            <path
+              d="M14.998 1.032a2 2 0 0 0-.815.89l-3.606 7.766L1.951 10.8a2 2 0 0 0-1.728 2.24l.031.175A2 2 0 0 0 .87 14.27l6.36 5.726-1.716 8.608a2 2 0 0 0 1.57 2.352l.18.028a2 2 0 0 0 1.215-.259l7.519-4.358 7.52 4.358a2 2 0 0 0 2.734-.727l.084-.162a2 2 0 0 0 .147-1.232l-1.717-8.608 6.361-5.726a2 2 0 0 0 .148-2.825l-.125-.127a2 2 0 0 0-1.105-.518l-8.627-1.113-3.606-7.765a2 2 0 0 0-2.656-.971zm-3.07 10.499l4.07-8.766 4.07 8.766 9.72 1.252-7.206 6.489 1.938 9.723-8.523-4.94-8.522 4.94 1.939-9.723-7.207-6.489z">
+            </path>
+          </svg>
+          <p class="ms-2 mb-0">
+            Vệ sinh tăng cường <br /> <span class="text-muted">Chủ nhà này đã cam kết thực hiện quy trình vệ sinh tăng
+              cường 5 bước của Airbnb.</span>
+          </p>
+        </div>
+        <div class="d-flex align-items-center pb-3">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+            focusable="false" style="display: block; height: 34px; width: 34px; fill: currentcolor;">
+            <path
+              d="m16 17c3.8659932 0 7 3.1340068 7 7s-3.1340068 7-7 7-7-3.1340068-7-7 3.1340068-7 7-7zm0 2c-2.7614237 0-5 2.2385763-5 5s2.2385763 5 5 5 5-2.2385763 5-5-2.2385763-5-5-5zm9.6666667-18.66666667c1.0543618 0 1.9181651.81587779 1.9945142 1.85073766l.0054858.14926234v6.38196601c0 .70343383-.3690449 1.35080636-.9642646 1.71094856l-.1413082.0779058-9.6666667 4.8333334c-.5067495.2533747-1.0942474.2787122-1.6171466.0760124l-.1717078-.0760124-9.66666666-4.8333334c-.62917034-.3145851-1.04315599-.93418273-1.09908674-1.62762387l-.00648607-.16123049v-6.38196601c0-1.05436179.81587779-1.91816512 1.85073766-1.99451426l.14926234-.00548574zm0 2h-19.33333337v6.38196601l9.66666667 4.83333336 9.6666667-4.83333336z">
+            </path>
+          </svg>
+          <p class="ms-2 mb-0">
+            Phong là chủ nhà siêu cấp <br /> <span class="text-muted">Chủ nhà siêu cấp là những chủ nhà có kinh nghiệm,
+              được đánh giá cao và là những người cam kết mang lại quãng thời gian ở tuyệt vời cho khách.</span>
+          </p>
+        </div>
+        <div class="d-flex align-items-center pb-3">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+            focusable="false" style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+            <path
+              d="m11.6667 0-.00095 1.666h8.667l.00055-1.666h2l-.00055 1.666 6.00065.00063c1.0543745 0 1.9181663.81587127 1.9945143 1.85073677l.0054857.14926323v15.91907c0 .4715696-.1664445.9258658-.4669028 1.2844692l-.1188904.1298308-8.7476886 8.7476953c-.3334303.3332526-.7723097.5367561-1.2381975.5778649l-.1758207.0077398h-12.91915c-2.68874373 0-4.88181754-2.1223321-4.99538046-4.7831124l-.00461954-.2168876v-21.66668c0-1.05436021.81587582-1.91815587 1.85073739-1.99450431l.14926261-.00548569 5.999-.00063.00095-1.666zm16.66605 11.666h-24.666v13.6673c0 1.5976581 1.24893332 2.9036593 2.82372864 2.9949072l.17627136.0050928 10.999-.0003.00095-5.6664c0-2.6887355 2.122362-4.8818171 4.7832071-4.9953804l.2168929-.0046196 5.66595-.0006zm-.081 8-5.58495.0006c-1.5977285 0-2.9037573 1.2489454-2.9950071 2.8237299l-.0050929.1762701-.00095 5.5864zm-18.586-16-5.999.00062v5.99938h24.666l.00065-5.99938-6.00065-.00062.00055 1.66733h-2l-.00055-1.66733h-8.667l.00095 1.66733h-2z">
+            </path>
+          </svg>
+          <p class="ms-2 mb-0">
+            Miễn phí hủy trong 48 giờ.
+          </p>
+        </div>
+      </div>
+
+      <hr />
+      <div class="py-3">
+        <p>{{roomDetail?.description.length > 100 && !showMoreDescription ? roomDetail?.description.substr(0,100) +
+          '...' :
+          roomDetail?.description}}
+        </p>
+        <a *ngIf="roomDetail?.description.length > 100 && !showMoreDescription" type="button"
+          (click)=clickShowMore()>Hiển thị
+          thêm</a>
+      </div>
+
+      <hr />
+      <!-- Tiện nghi -->
+      <div class="py-3">
+        <h6>
+          Tiện nghi
+        </h6>
+        <div class="row py-3">
+          <ng-container *ngFor="let amenity of amenities">
+            <div class="col-6" *ngIf="roomDetail?.[amenity.name]">
+              <div class="d-flex pb-2">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+                  focusable="false" style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+                  <path [attr.d]="amenity.img">
+                  </path>
+                </svg>
+                <span class="ms-2">{{amenity.value}}</span>
+              </div>
+            </div>
+          </ng-container>
+
+        </div>
+        <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#amenitiesModal">Hiển thị tất cả
+          {{amenities.length}} tiện nghi</button>
+      </div>
+    </div>
+
+    <!-- Reserve panel -->
+    <div class="col-5 py-3">
+      <div class="reserve-panel">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center pb-3">
+            <div><span class=" fw-bolder" style="font-size: 1.5rem;">VND {{roomDetail?.price | number}}</span> /đêm
+            </div>
+            <div>
+              <i class="fa fa-star" aria-hidden="true" style="color: red"></i>
+              4.83
+              <a routerLink="." fragment="reviewSection">({{arrReview?.length}} đánh giá) </a>
+            </div>
+          </div>
+          <div class="rounded-3 border border-secondary">
+            <div class="d-flex justify-content-between">
+              <div style="border-right: 1px solid;">
+                <div class="p-3">
+                  <label for="nhanPhong">NHẬN PHÒNG</label>
+                  <p-calendar inputId="nhanPhong" [(ngModel)]="date1"></p-calendar>
+                </div>
+              </div>
+              <div class="p-3">
+                <label for="traPhong">TRẢ PHÒNG</label>
+                <p-calendar inputId="traPhong" [(ngModel)]="date2"></p-calendar>
+              </div>
+            </div>
+            <div class="p-3" style="border-top: 1px solid;">
+              <label>KHÁCH</label>
+              <p-dropdown [options]="items" [(ngModel)]="item" placeholder="" [virtualScroll]="true" [itemSize]="31"
+                [filter]="false"></p-dropdown>
+            </div>
+          </div>
+          <!-- Dat phong button -->
+          <div class="py-3">
+            <button class="w-100 reserve-btn">Đặt
+              phòng</button>
+          </div>
+          <span class="text-center text-muted">Bạn vẫn chưa bị trừ tiền</span>
+          <div class="d-flex justify-content-between py-2">
+            <a href="#">$44 x 5 đêm</a>
+            <span>$221</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <a href="#">Phí dịch vụ</a>
+            <span>$31</span>
+          </div>
+          <hr />
+          <div class="d-flex justify-content-between fw-bolder">
+            <span>Tổng</span>
+            <span>$252</span>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mt-3 w-100 justify-content-center">
+        <svg viewBox=" 0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+          focusable="false" style="display: block; height: 16px; width: 16px; fill: currentcolor;">
+          <path
+            d="M28 6H17V4a2 2 0 0 0-2-2H3v28h2V18h10v2a2 2 0 0 0 2 2h11l.115-.006a1 1 0 0 0 .847-1.269L27.039 14l1.923-6.724A1 1 0 0 0 28 6z">
+          </path>
+        </svg>
+        <a href="#" class="text-muted ms-2">Báo cáo nhà/phòng cho thuê này.</a>
+      </div>
+
+    </div>
+  </div>
+  <hr />
+
+  <!-- review section -->
+  <div id="reviewSection" class="row py-3">
+    <div class="pb-3">
+      <i class="fa fa-star" aria-hidden="true" style="color: red"></i> <span class="ms-2 fw-bolder">4,83
+        ({{arrReview?.length}} đánh giá)</span>
+    </div>
+    <div class="col pe-5">
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Mức độ sạch sẽ</span>
+        <div class="d-flex" style="flex-basis: 50%;
+          justify-content: space-between;
+          align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>4.8</span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Liên lạc</span>
+        <div class="d-flex" style="flex-basis: 50%;
+          justify-content: space-between;
+          align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>4.8</span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Nhận phòng</span>
+        <div class="d-flex" style="flex-basis: 50%;
+          justify-content: space-between;
+          align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>5.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Độ chính xác</span>
+        <div class="d-flex" style="flex-basis: 50%;
+        justify-content: space-between;
+        align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>4.8</span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Vị trí</span>
+        <div class="d-flex" style="flex-basis: 50%;
+        justify-content: space-between;
+        align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>4.8</span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-between pb-2">
+        <span>Giá trị</span>
+        <div class="d-flex" style="flex-basis: 50%;
+        justify-content: space-between;
+        align-items: center;">
+          <div class="progress" style="height: 5px; flex-basis: 85%;">
+            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <span>5.0</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="py-3">
+    <div class="row">
+      <div class="col-md-6" *ngFor="let review of arrReview | slice:0:6">
+        <div class="card mb-3" style="max-width: 540px; border-color: transparent;">
+          <div class="row g-0 align-items-center">
+            <div class="col-md-1">
+              <img [src]="review.userId.avatar" class="rounded-circle" width="50" height="50" alt="...">
+            </div>
+            <div class="col-md-11">
+              <div class="card-body">
+                <p class="card-text mb-0">{{review.userId.name}}</p>
+                <p class="card-text"><small class="text-muted">{{review.updatedAt | date: 'dd/MM/yyyy'}}</small></p>
+              </div>
+            </div>
+            <p>{{review.content}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#reviewModal">Hiển thị tất cả
+      {{arrReview?.length}} đánh giá</button>
+  </div>
+</div>
+
+<!-- Modal for review -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <cdk-virtual-scroll-viewport [itemSize]="10">
+            <div class="col-12" *cdkVirtualFor="let review of arrReview">
+              <div class="card mb-3" style="max-width: 540px; border-color: transparent;">
+                <div class="row g-0 align-items-center">
+                  <div class="col-md-1">
+                    <img [src]="review.userId.avatar" class="rounded-circle" width="50" height="50" alt="...">
+                  </div>
+                  <div class="col-md-11">
+                    <div class="card-body">
+                      <p class="card-text mb-0">{{review.userId.name}}</p>
+                      <p class="card-text"><small class="text-muted">{{review.updatedAt | date: 'dd/MM/yyyy'}}</small>
+                      </p>
+                    </div>
+                  </div>
+                  <p>{{review.content}}</p>
+                </div>
+              </div>
+            </div>
+          </cdk-virtual-scroll-viewport>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for amenities -->
+<div class="modal fade" id="amenitiesModal" tabindex="-1" aria-labelledby="amenitiesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="amenitiesModalLabel">Những gì nơi này cung cấp</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <cdk-virtual-scroll-viewport [itemSize]="10">
+            <div class="col-12" *cdkVirtualFor="let amenity of amenities">
+              <div class="card mb-3" style="max-width: 540px; border-color: transparent;">
+                <div class="row g-0 align-items-center">
+                  <div class="col-md-1">
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
+                      focusable="false" style="display: block; height: 24px; width: 24px; fill: currentcolor;">
+                      <path [ngStyle]="{'opacity': roomDetail?.[amenity.name] ? '1':'0.4'}" [attr.d]="amenity.img"
+                        style="text-decoration: line-through;"></path>
+                    </svg>
+
+                  </div>
+                  <div class="col-md-11">
+                    <div class="card-body">
+                      <p *ngIf="roomDetail?.[amenity.name]; else showNotIncluded" class="card-text mb-0">
+                        {{amenity.value}}</p>
+                      <ng-template #showNotIncluded>
+                        <p style="opacity: .4; text-decoration: line-through;" class="card-text mb-0"
+                          data-bs-toggle="tooltip" data-bs-placement="bottom" title="Không được bao gồm">
+                          {{amenity.value}}</p>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </cdk-virtual-scroll-viewport>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

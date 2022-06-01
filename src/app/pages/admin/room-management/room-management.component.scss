@@ -1,0 +1,14 @@
+:host ::ng-deep {
+  .p-dialog .room-image{
+    width: 150px;
+    margin: 0 auto 2rem auto;
+    display: block;
+  }
+}
+
+form {
+  .ng-invalid {
+    border-left: 5px solid red;
+  }
+}
+

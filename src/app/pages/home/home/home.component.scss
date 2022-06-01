@@ -1,0 +1,18 @@
+p:first-child {
+  margin-bottom: 0 !important;
+}
+
+.below-side{
+  img {
+    max-height: 600px;
+    min-height: 600px;
+  }
+
+  @media only screen and (min-width: 768px) {
+    img {
+      max-height: 300px;
+      min-height: 300px;
+    }
+  }
+
+}

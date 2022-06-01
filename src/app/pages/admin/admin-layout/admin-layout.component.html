@@ -1,1 +1,113 @@
-<p>admin-layout works!</p>
+<div id="pageToTop" class="wrapper">
+
+  <!-- Sidebar -->
+  <ul #sideBar class="navbar-nav bg-gradient-primary sidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="fa fa-smile-o" aria-hidden="true"></i>
+      </div>
+      <div class="sidebar-brand-text mx-3">Dashboard</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - User -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./manageuser" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="fa fa-user" aria-hidden="true"></i>
+        <span>Quản lý người dùng</span></a>
+    </li>
+
+    <!-- Nav Item - Position -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./managelocation" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}">
+        <i class="fa fa-map-marker" aria-hidden="true"></i>
+        <span>Quản lý thông tin vị trí</span></a>
+    </li>
+
+    <!-- Nav Item - Room -->
+    <li class="nav-item">
+      <a class="nav-link" routerLink="./manageroom" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="fa fa-bed" aria-hidden="true"></i>
+        <span>Quản lý thông tin phòng</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper d-flex flex-column">
+
+    <!-- Main Content -->
+    <div class="content">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand topbar mb-4 shadow">
+
+        <!-- Sidebar Toggle (Topbar) -->
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars"></i>
+        </button>
+
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+
+          <!-- Nav Item - User Information -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{user.name}}</span>
+              <img class="img-profile rounded-circle" [src]="user.avatar || noAvatar">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+              <a routerLink="/user/profile/{{user._id}}" class="dropdown-item" href="#">
+                <i class="fa fa-user fa-fw mr-2 text-gray-400"></i>
+                Cập nhật thông tin
+              </a>
+              <a class="dropdown-item" role="button" (click)="logOut()">
+                <i class="fa fa-sign-out fa-fw mr-2 text-gray-400"></i>
+                Đăng xuất
+              </a>
+            </div>
+          </li>
+
+        </ul>
+
+      </nav>
+      <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Content Row -->
+        <div class="row">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Copyright &copy; Your Website 2022</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<a class="scroll-to-top rounded" [routerLink]="scrollTopSection" fragment="pageToTop">
+  <i class=" fa fa-angle-up"></i>
+</a>
