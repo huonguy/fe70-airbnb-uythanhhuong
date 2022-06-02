@@ -12,11 +12,15 @@ import { RoomService } from 'src/app/_core/services/room.service';
   styleUrls: ['./room-management.component.scss']
 })
 export class RoomManagementComponent implements OnInit {
-
+  imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   actionBtnDialog!: string;
   headerDialog!: string;
   roomDialog!: boolean;
   submitted!: boolean;
+  viewDetailDialog!: boolean;
+
+  files: FileList;
+  fileToUpload: File | null = null;
 
   arrRoom!: Room[];
   room!: Room;
@@ -56,6 +60,20 @@ export class RoomManagementComponent implements OnInit {
     this.roomDialog = true;
   }
 
+  viewDetailRoom(roomId: string): void {
+    this.viewDetailDialog = true;
+
+    this.roomService.layThongTinChiTietPhong(roomId).subscribe({
+      next: result => {
+        console.log('thong tin chi tiet phong', result);
+        this.room = result;
+      },
+      error: err => {
+        console.log({ err });
+      }
+    })
+  }
+
   editRoom(room: Room): void {
     this.headerDialog = "Chỉnh sửa phòng";
     this.actionBtnDialog = 'Cập nhật';
@@ -91,11 +109,14 @@ export class RoomManagementComponent implements OnInit {
     this.submitted = true;
 
     if (this.room._id) {
+      console.log('thong tin thay doi', this.room);
       let roomIndex = this.arrRoom.findIndex(r => r._id === this.room._id);
       if (roomIndex !== -1) {
         this.roomService.capNhatThongTinPhong(this.room._id, this.room).subscribe({
           next: result => {
             console.log('cap nhat phong', result);
+
+            result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
             this.arrRoom[roomIndex] = result;
             this.arrRoom = [...this.arrRoom];
 
@@ -111,6 +132,8 @@ export class RoomManagementComponent implements OnInit {
       this.roomService.taoPhong(this.room).subscribe({
         next: result => {
           console.log('tạo phòng', result);
+
+          result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
           this.arrRoom.push(result);
           this.arrRoom = [...this.arrRoom];
 
@@ -125,7 +148,32 @@ export class RoomManagementComponent implements OnInit {
 
   hideDialog(): void {
     this.roomDialog = false;
+    this.viewDetailDialog = false;
     this.submitted = false;
+  }
+
+  updateImage(event: Event, roId: string) {
+    this.files = (event.target as HTMLInputElement).files;
+    this.fileToUpload = this.files.item(0);
+
+    let roomIndex = this.arrRoom.findIndex(ro => ro._id === roId);
+    if (roomIndex !== -1) {
+      this.roomService.capNhatAnhPhong(this.fileToUpload, roId).subscribe({
+        next: result => {
+          console.log('cap nhat anh phong', result);
+
+          result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
+          this.arrRoom[roomIndex] = result;
+          this.arrRoom = [...this.arrRoom];
+
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cập nhật ảnh thành công.', life: 3000 });
+
+        },
+        error: err => {
+          console.log({ err });
+        }
+      })
+    }
   }
 
   applyFilterGlobal($event: any, stringVal: string) {

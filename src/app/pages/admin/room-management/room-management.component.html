@@ -22,7 +22,7 @@
         <th>Hình ảnh</th>
         <th pSortableColumn="locationId.province">Địa điểm <p-sortIcon field="locationId.province"></p-sortIcon>
         </th>
-        <th pSortableColumn="guests">Số lượng khách <p-sortIcon field="guests"></p-sortIcon>
+        <th pSortableColumn="guests">Số khách <p-sortIcon field="guests"></p-sortIcon>
         </th>
         <th></th>
       </tr>
@@ -33,15 +33,24 @@
           {{ro._id}}
         </td>
         <td>{{ro.name}}</td>
-        <td><img [src]="ro.image" [alt]="" width="100" class="shadow-4" /></td>
+        <td class="text-center">
+          <img [src]="ro.image || imageDefault" [alt]="" width="100" class="shadow-4 mb-1" />
+          <br />
+          <label class="editPic-label" role="button">
+            Chỉnh sửa
+            <input class="hidden" type="file" id="newPhoto" accept="image/*" (change)="updateImage($event, ro._id)" />
+          </label>
+        </td>
         <td>{{ro.locationId?.name}}<br />
           <small class="text-muted">{{ro.locationId?.province}}</small>
         </td>
         <td>{{ro.guests}}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2"
+          <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
+            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailRoom(ro._id)"></button>
+          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2 my-1"
             (click)="editRoom(ro)"></button>
-          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning my-1"
             (click)="deleteRoom(ro)"></button>
         </td>
       </tr>
@@ -141,13 +150,11 @@
       </div>
       <div class="field">
         <label for="locationId">Địa điểm</label>
-        <p-dropdown dataKey="name" [options]=" arrLocation" [(ngModel)]="room.locationId" [filter]="true"
-          filterBy="name" [showClear]="true" placeholder="Chọn địa điểm" name="locationId">
-          <ng-template pTemplate="selectedItem">
-            <div *ngIf="room.locationId">
-              <span>{{room.locationId?.name}}</span><br />
-              <small class="text-muted">{{room.locationId?.province}}</small>
-            </div>
+        <p-dropdown dataKey="name" [options]="arrLocation" [(ngModel)]="room.locationId" [filter]="true" filterBy="name"
+          [showClear]="true" placeholder="Chọn địa điểm" name="locationId">
+          <ng-template let-item pTemplate="selectedItem">
+            <span>{{item.name}}</span><br />
+            <small class="text-muted">{{item.province}}</small>
           </ng-template>
           <ng-template let-location pTemplate="item">
             <div>
@@ -157,11 +164,47 @@
           </ng-template>
         </p-dropdown>
       </div>
-      <button [disabled]="roomForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
-        class="w-50 p-button-text"></button>
-      <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
+      <div class="d-flex justify-content-center">
+        <button [disabled]="roomForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
+          class="w-50 p-button-text"></button>
+        <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
+      </div>
     </form>
   </ng-template>
 </p-dialog>
 
+<p-dialog [(visible)]="viewDetailDialog" [style]="{width: '450px'}" header={{room?.name}} [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="card mb-3" style="border: 0;">
+      <img [src]="room?.image || imageDefault" class="card-img-top" alt="room.image">
+      <div class="card-body">
+        <div class="d-flex">
+          <p class="card-text"><small class="text-muted">{{room?.guests}} khách.</small></p>
+          <p class="card-text"><small class="text-muted">{{room?.bedRoom}} phòng ngủ.</small></p>
+          <p class="card-text"><small class="text-muted">{{room?.bath}} phòng tắm.</small></p>
+        </div>
+        <h5 class="card-title">{{room?.description}}</h5>
+        <p class="card-text">Giá tiền : <span class="text-muted">{{room?.price | number}} VND</span> </p>
+        <p class="card-text">Tiện nghi :</p>
+        <div class="d-flex flex-wrap mb-3">
+          <p class="card-text me-3 text-muted" *ngIf=" room?.elevator">Thang máy</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.hotTub">Bồn nước nóng</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.pool">Hồ bơi</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.indoorFireplace">Lò sưởi trong nhà</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.dryer">Máy sấy khô</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.gym">Phòng thể dục</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.kitchen">Nhà bếp</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.wifi">Wifi</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.heating">Máy làm nóng</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.cableTV">Truyền hình cáp</p>
+        </div>
+        <p class="card-text">Địa điểm : <span class="text-muted">{{room?.locationId?.name}},
+            {{room?.locationId?.province}},
+            {{room?.locationId.country}}</span></p>
+      </div>
+    </div>
+    <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>
+  </ng-template>
+</p-dialog>
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

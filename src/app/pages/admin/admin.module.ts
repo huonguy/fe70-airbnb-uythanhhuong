@@ -9,11 +9,10 @@ import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.mod
 import { FormsModule } from '@angular/forms';
 
 //config route
-import { RouterModule, Routes } from '@angular/router'
-import { ProductService } from 'src/app/_core/services/productService';
+import { RouterModule, Routes } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClientModule } from '@angular/common/http';
-import { LocationManagementComponent } from './location-management/location-management.component'
+import { LocationManagementComponent } from './location-management/location-management.component';
 const adminRoute: Routes = [
   {
     path: '', component: AdminLayoutComponent, children: [
@@ -42,7 +41,6 @@ const adminRoute: Routes = [
     AdminLayoutComponent
   ],
   providers: [
-    ProductService,
     MessageService,
     ConfirmationService
   ]

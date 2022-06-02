@@ -10,10 +10,9 @@ import { UserService } from 'src/app/_core/services/user.service';
   styleUrls: ['./user-management.component.scss'],
 })
 export class UserManagementComponent implements OnInit {
-
+  imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   headerDialog!: string;
   actionBtnDialog!: string;
-  avatarDefault: string = "../../../../assets/images/no-profile-picture.png"
 
   arrUser!: User[];
   user!: User;
@@ -51,6 +50,10 @@ export class UserManagementComponent implements OnInit {
     this.user = {};
     this.submitted = false;
     this.userDialog = true;
+  }
+
+  viewDetailUser(user: User) {
+
   }
 
   editUser(user: User) {

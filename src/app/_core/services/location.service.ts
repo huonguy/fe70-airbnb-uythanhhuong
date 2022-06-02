@@ -13,6 +13,11 @@ export class LocationService {
     return ob;
   }
 
+  layThongTinChiTietViTri(id: string): Observable<any> {
+    let ob = this.httpClient.get(`${DOMAIN}/api/locations/${id}`);
+    return ob;
+  }
+
   taoViTri(location: Location): Observable<any> {
     let ob = this.httpClient.post(`${DOMAIN}/api/locations`, location);
     return ob;

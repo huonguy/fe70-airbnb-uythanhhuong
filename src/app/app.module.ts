@@ -7,10 +7,9 @@ import { HomeModule } from './pages/home/home.module';
 import { UserModule } from './pages/user/user.module';
 
 //cấu hình route
-import { ExtraOptions, RouterModule, Routes } from '@angular/router'
+import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from './_core/services/productService';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { httpApiInterceptor } from './_core/services/httpApi.interceptor';
 

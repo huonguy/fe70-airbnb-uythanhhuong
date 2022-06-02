@@ -31,13 +31,17 @@
       <tr>
         <td>{{us._id}}</td>
         <td>{{us.name}}</td>
-        <td><img [src]="us.avatar || avatarDefault" [alt]="us.name" width="100" class="shadow-4" /></td>
+        <td>
+          <img [src]="us.avatar || imageDefault" [alt]="us.name" width="100" class="shadow-4 mb-1" />
+        </td>
         <td>{{us.type}}</td>
         <td>{{us.email}}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2"
+          <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
+            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailUser(us)"></button>
+          <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2 my-1"
             (click)="editUser(us)"></button>
-          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning"
+          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning my-1"
             (click)="deleteUser(us)"></button>
         </td>
       </tr>
@@ -129,7 +133,7 @@
       </div>
       <button [disabled]="userForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
         class="w-50 p-button-text"></button>
-      <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
+      <button type="button" pButton pRipple label="Thoát" class="w-50 p-button-text" (click)="hideDialog()"></button>
     </form>
   </ng-template>
 </p-dialog>

@@ -10,10 +10,15 @@ import { LocationService } from 'src/app/_core/services/location.service';
   styleUrls: ['./location-management.component.scss']
 })
 export class LocationManagementComponent implements OnInit {
+  imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   actionBtnDialog!: string;
   headerDialog!: string;
   locationDialog!: boolean;
   submitted!: boolean;
+  onlyView!: boolean;
+
+  files: FileList;
+  fileToUpload: File | null = null;
 
   arrLocation!: Location[];
   location!: Location;
@@ -41,6 +46,15 @@ export class LocationManagementComponent implements OnInit {
     this.location = {};
     this.submitted = false;
     this.locationDialog = true;
+    this.onlyView = false;
+  }
+
+  viewDetailLocation(location: Location): void {
+    this.headerDialog = "Chi tiết địa điểm";
+
+    this.location = { ...location };
+    this.locationDialog = true;
+    this.onlyView = true;
   }
 
   editLocation(location: Location): void {
@@ -49,6 +63,7 @@ export class LocationManagementComponent implements OnInit {
 
     this.location = { ...location };
     this.locationDialog = true;
+    this.onlyView = false;
   }
 
   deleteLocation(location: Location): void {
@@ -113,6 +128,31 @@ export class LocationManagementComponent implements OnInit {
   hideDialog(): void {
     this.locationDialog = false;
     this.submitted = false;
+  }
+
+  updateImage(event: Event, locId: string) {
+    this.files = (event.target as HTMLInputElement).files;
+    this.fileToUpload = this.files.item(0);
+
+    let locationIndex = this.arrLocation.findIndex(loc => loc._id === locId);
+    if (locationIndex !== -1) {
+      this.locationService.capNhatAnhViTri(this.fileToUpload, locId).subscribe({
+        next: result => {
+          console.log('cap nhat anh vi tri', result);
+
+          this.arrLocation[locationIndex] = result;
+          this.arrLocation = [...this.arrLocation];
+
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cập nhật ảnh thành công.', life: 3000 });
+        },
+        error: err => {
+          console.log({ err });
+        }
+      })
+
+    }
+
+
   }
 
   applyFilterGlobal($event: any, stringVal: string) {
