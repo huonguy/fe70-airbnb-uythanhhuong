@@ -19,6 +19,7 @@ export class UserManagementComponent implements OnInit {
 
   userDialog!: boolean;
   submitted!: boolean;
+  viewDetailDialog!: boolean;
 
   roleList: any[];
 
@@ -52,8 +53,18 @@ export class UserManagementComponent implements OnInit {
     this.userDialog = true;
   }
 
-  viewDetailUser(user: User) {
+  viewDetailUser(userId: string) {
+    this.viewDetailDialog = true;
 
+    this.userService.layThongtinNguoiDung(userId).subscribe({
+      next: result => {
+        console.log('thong tin nguoi dung', result);
+        this.user = result;
+      },
+      error: err => {
+        console.log({ err });
+      }
+    })
   }
 
   editUser(user: User) {
@@ -89,6 +100,7 @@ export class UserManagementComponent implements OnInit {
 
   hideDialog() {
     this.userDialog = false;
+    this.viewDetailDialog = false;
     this.submitted = false;
   }
 

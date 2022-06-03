@@ -45,7 +45,7 @@
         <td>{{loc.country}}</td>
         <td>
           <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
-            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailLocation(loc)"></button>
+            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailLocation(loc._id)"></button>
           <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2 my-1"
             (click)="editLocation(loc)"></button>
           <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning my-1"
@@ -63,11 +63,11 @@
   styleClass="p-fluid">
   <ng-template pTemplate="content">
     <form #locationForm="ngForm" (ngSubmit)="clickLocationAction()">
-      <img [src]="location.image" [alt]="location.image" class="location-image" *ngIf="location.image">
+      <!-- <img [src]="location.image" [alt]="location.image" class="location-image" *ngIf="location.image"> -->
       <div class="field">
         <label for="name">Tên địa điểm</label>
-        <input [readonly]="onlyView" type="text" pInputText id="name" [(ngModel)]="location.name" required
-          #locationName="ngModel" name="name" />
+        <input type="text" pInputText id="name" [(ngModel)]="location.name" required #locationName="ngModel"
+          name="name" />
         <ng-container *ngIf="locationName.invalid && (locationName.dirty || locationName.touched)">
           <small class="p-error" *ngIf="locationName.errors?.['required']">
             Tên địa điểm không được bỏ trống.
@@ -76,8 +76,8 @@
       </div>
       <div class="field">
         <label for="province">Tỉnh</label>
-        <input [readonly]="onlyView" type="text" pInputText id="province" [(ngModel)]="location.province" required
-          #locationProvince="ngModel" name="province" />
+        <input type="text" pInputText id="province" [(ngModel)]="location.province" required #locationProvince="ngModel"
+          name="province" />
         <ng-container *ngIf="locationProvince.invalid && (locationProvince.dirty || locationProvince.touched)">
           <small class="p-error" *ngIf="locationProvince.errors?.['required']">
             Tỉnh không được bỏ trống.
@@ -86,8 +86,8 @@
       </div>
       <div class="field">
         <label for="country">Quốc gia</label>
-        <input [readonly]="onlyView" type="text" pInputText id="country" [(ngModel)]="location.country" required
-          #locationCountry="ngModel" name="country" />
+        <input type="text" pInputText id="country" [(ngModel)]="location.country" required #locationCountry="ngModel"
+          name="country" />
         <ng-container *ngIf="locationCountry.invalid && (locationCountry.dirty || locationCountry.touched)">
           <small class="p-error" *ngIf="locationCountry.errors?.['required']">
             Quốc gia không được bỏ trống.
@@ -96,16 +96,32 @@
       </div>
       <div class="field">
         <label for="valueate">Đánh giá</label>
-        <p-inputNumber [readonly]="onlyView" id="valueate" [(ngModel)]="location.valueate" name="valueate">
+        <p-inputNumber id="valueate" [(ngModel)]="location.valueate" name="valueate">
         </p-inputNumber>
       </div>
       <div class="d-flex justify-content-center">
-        <button [hidden]="onlyView" [disabled]="locationForm.invalid" type="submit" pButton pRipple
-          [label]="actionBtnDialog" class="w-50 p-button-text"></button>
-        <button type="button" pButton pRipple label="Thoát" class="w-50 p-button-text" (click)="hideDialog()"></button>
+        <button [disabled]="locationForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
+          class="w-50 p-button-text"></button>
+        <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
       </div>
-
     </form>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="viewDetailDialog" [style]="{width: '450px'}" header={{location?.name}} [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="card mb-3" style="border: 0;">
+      <img [src]="location?.image || imageDefault" class="card-img-top" alt="room.image">
+      <div class="card-body">
+        <p clas="card-text">Mã địa điểm : <span class="text-muted">{{location?._id}}</span></p>
+        <p clas="card-text">Tỉnh : <span class="text-muted">{{location?.province}}</span></p>
+        <p clas="card-text">Quốc gia : <span class="text-muted">{{location?.country}}</span></p>
+        <p clas="card-text">Đánh giá : <span class="text-muted">{{location?.valueate}}</span></p>
+
+      </div>
+    </div>
+    <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>
   </ng-template>
 </p-dialog>
 

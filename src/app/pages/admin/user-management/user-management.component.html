@@ -38,7 +38,7 @@
         <td>{{us.email}}</td>
         <td>
           <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
-            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailUser(us)"></button>
+            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailUser(us._id)"></button>
           <button pButton pRipple icon="pi pi-pencil" pTooltip="Sửa" class="p-button-rounded p-button-success me-2 my-1"
             (click)="editUser(us)"></button>
           <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning my-1"
@@ -56,7 +56,7 @@
   styleClass="p-fluid">
   <ng-template pTemplate="content">
     <form #userForm="ngForm" (ngSubmit)="clickUserAction()">
-      <img [src]="user.avatar" [alt]="user.avatar" class="user-image" *ngIf="user.avatar">
+      <!-- <img [src]="user.avatar" [alt]="user.avatar" class="user-image" *ngIf="user.avatar"> -->
       <div class="field">
         <label for="name">Tên</label>
         <input type="text" id="name" pInputText [(ngModel)]="user.name" required #userName="ngModel" name="name" />
@@ -133,8 +133,27 @@
       </div>
       <button [disabled]="userForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
         class="w-50 p-button-text"></button>
-      <button type="button" pButton pRipple label="Thoát" class="w-50 p-button-text" (click)="hideDialog()"></button>
+      <button type="button" pButton pRipple label="Hủy" class="w-50 p-button-text" (click)="hideDialog()"></button>
     </form>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="viewDetailDialog" [style]="{width: '450px'}" header={{user?.name}} [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="card mb-3" style="border: 0;">
+      <img [src]="user?.avatar || imageDefault" class="card-img-top" alt="room.image">
+      <div class="card-body">
+        <p class="card-text">Mã người dùng : <span class="text-muted">{{user?._id}}</span> </p>
+        <p class="card-text">Email : <span class="text-muted">{{user?.email}}</span> </p>
+        <p class="card-text">Địa chỉ : <span class="text-muted">{{user?.address}}</span> </p>
+        <p class="card-text">Ngày sinh : <span class="text-muted">{{user?.birthday | date: 'MM/dd/yyyy'}}</span> </p>
+        <p class="card-text">Giới tính : <span class="text-muted">{{user?.gender?'Nam':'Nữ'}}</span> </p>
+        <p class="card-text">Điện thoại : <span class="text-muted">{{user?.phone}}</span> </p>
+        <p class="card-text">Vai trò : <span class="text-muted">{{user?.type}}</span> </p>
+      </div>
+    </div>
+    <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>
   </ng-template>
 </p-dialog>
 

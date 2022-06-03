@@ -15,7 +15,7 @@ export class LocationManagementComponent implements OnInit {
   headerDialog!: string;
   locationDialog!: boolean;
   submitted!: boolean;
-  onlyView!: boolean;
+  viewDetailDialog!: boolean;
 
   files: FileList;
   fileToUpload: File | null = null;
@@ -46,15 +46,20 @@ export class LocationManagementComponent implements OnInit {
     this.location = {};
     this.submitted = false;
     this.locationDialog = true;
-    this.onlyView = false;
   }
 
-  viewDetailLocation(location: Location): void {
-    this.headerDialog = "Chi tiết địa điểm";
+  viewDetailLocation(locationId: string): void {
+    this.viewDetailDialog = true;
 
-    this.location = { ...location };
-    this.locationDialog = true;
-    this.onlyView = true;
+    this.locationService.layThongTinChiTietViTri(locationId).subscribe({
+      next: result => {
+        console.log('thong tin chi tiet vi tri', result);
+        this.location = result;
+      },
+      error: err => {
+        console.log({ err });
+      }
+    })
   }
 
   editLocation(location: Location): void {
@@ -63,7 +68,6 @@ export class LocationManagementComponent implements OnInit {
 
     this.location = { ...location };
     this.locationDialog = true;
-    this.onlyView = false;
   }
 
   deleteLocation(location: Location): void {
@@ -127,6 +131,7 @@ export class LocationManagementComponent implements OnInit {
 
   hideDialog(): void {
     this.locationDialog = false;
+    this.viewDetailDialog = false;
     this.submitted = false;
   }
 

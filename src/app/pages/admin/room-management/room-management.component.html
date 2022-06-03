@@ -65,7 +65,7 @@
   styleClass="p-fluid">
   <ng-template pTemplate="content">
     <form #roomForm="ngForm" (ngSubmit)="clickRoomAction()">
-      <img [src]="room.image" [alt]="room.image" class="room-image" *ngIf="room.image">
+      <!-- <img [src]="room.image" [alt]="room.image" class="room-image" *ngIf="room.image"> -->
       <div class="field">
         <label for="name">Tên</label>
         <input type="text" pInputText id="name" [(ngModel)]="room.name" required #roomName="ngModel" name="name" />
@@ -179,12 +179,14 @@
     <div class="card mb-3" style="border: 0;">
       <img [src]="room?.image || imageDefault" class="card-img-top" alt="room.image">
       <div class="card-body">
-        <div class="d-flex">
-          <p class="card-text"><small class="text-muted">{{room?.guests}} khách.</small></p>
-          <p class="card-text"><small class="text-muted">{{room?.bedRoom}} phòng ngủ.</small></p>
-          <p class="card-text"><small class="text-muted">{{room?.bath}} phòng tắm.</small></p>
-        </div>
+
         <h5 class="card-title">{{room?.description}}</h5>
+        <p class="card-text">Mã phòng : <span class="text-muted">{{room?._id}} VND</span> </p>
+        <p class="card-text">Số Lượng :
+          <span class="text-muted">{{room?.guests}} khách.</span>
+          <span class="text-muted">{{room?.bedRoom}} phòng ngủ.</span>
+          <span class="text-muted">{{room?.bath}} phòng tắm.</span>
+        </p>
         <p class="card-text">Giá tiền : <span class="text-muted">{{room?.price | number}} VND</span> </p>
         <p class="card-text">Tiện nghi :</p>
         <div class="d-flex flex-wrap mb-3">
