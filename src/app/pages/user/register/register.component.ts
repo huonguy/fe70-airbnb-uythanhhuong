@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { User } from 'src/app/_core/models/user';
+import { MessageService } from 'primeng/api';
 import { UserService } from 'src/app/_core/services/user.service';
 
 @Component({
@@ -9,25 +10,24 @@ import { UserService } from 'src/app/_core/services/user.service';
   styleUrls: ['./../user-layout/user-layout.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  @Output() eventMessage = new EventEmitter();
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private messageService: MessageService, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
-  dangKy(values: User): void {
-    console.log(values);
-    this.userService.dangKy(values).subscribe({
+  dangKy(registerForm: NgForm): void {
+    this.userService.dangKy(registerForm.value).subscribe({
       next: result => {
-        console.log(result)
-        this.eventMessage.emit({ status: 'success', message: 'Đăng ký thành công!' });
-
+        // console.log(result);
+        registerForm.reset();
         this.router.navigate(['/user/login']);
+
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Đăng ký thành công!', life: 3000 })
       },
       error: err => {
-        this.eventMessage.emit({ status: 'error', message: 'Đăng ký không thành công!' });
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 })
       }
     })
   }

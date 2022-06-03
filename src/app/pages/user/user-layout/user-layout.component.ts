@@ -9,7 +9,6 @@ import { filter } from 'rxjs';
   styleUrls: ['./user-layout.component.scss']
 })
 export class UserLayoutComponent implements OnInit, DoCheck {
-  messageContent: Message[];
   @ViewChild('container') container!: ElementRef;
 
   requestURL: string | undefined;
@@ -45,11 +44,5 @@ export class UserLayoutComponent implements OnInit, DoCheck {
 
   signIn(): void {
     this.router.navigate(['/user/login']);
-  }
-
-  returnMessage($event: any) {
-    this.messageContent = [
-      { severity: $event.status, summary: $event.status, detail: $event.message, life: 3000 },
-    ];
   }
 }

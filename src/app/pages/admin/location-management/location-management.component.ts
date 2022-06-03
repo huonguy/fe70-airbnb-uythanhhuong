@@ -35,6 +35,7 @@ export class LocationManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
   }
@@ -58,6 +59,7 @@ export class LocationManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
   }
@@ -83,10 +85,11 @@ export class LocationManagementComponent implements OnInit {
             console.log('xoa vi tri', result);
             this.arrLocation = this.arrLocation.filter(val => val._id !== location._id);
             this.location = {};
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Xóa thành công', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công', life: 3000 });
           },
           error: err => {
             console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         })
       }
@@ -105,10 +108,11 @@ export class LocationManagementComponent implements OnInit {
             this.arrLocation[locationIndex] = result;
             this.arrLocation = [...this.arrLocation];
 
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
           },
           error: err => {
             console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         })
       }
@@ -120,7 +124,11 @@ export class LocationManagementComponent implements OnInit {
           this.arrLocation.push(result);
           this.arrLocation = [...this.arrLocation];
 
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+        },
+        error: err => {
+          console.log({ err });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
         }
       })
     }
@@ -148,16 +156,14 @@ export class LocationManagementComponent implements OnInit {
           this.arrLocation[locationIndex] = result;
           this.arrLocation = [...this.arrLocation];
 
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cập nhật ảnh thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật ảnh thành công.', life: 3000 });
         },
         error: err => {
           console.log({ err });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
         }
       })
-
     }
-
-
   }
 
   applyFilterGlobal($event: any, stringVal: string) {

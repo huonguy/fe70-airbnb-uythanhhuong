@@ -63,6 +63,7 @@ export class UserManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
   }
@@ -88,10 +89,11 @@ export class UserManagementComponent implements OnInit {
             console.log('xoa nguoi dung', result);
             this.arrUser = this.arrUser.filter(val => val._id !== user._id);
             this.user = {};
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Xóa thành công!', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công!', life: 3000 });
           },
           error: err => {
             console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         })
       }
@@ -116,10 +118,11 @@ export class UserManagementComponent implements OnInit {
             this.arrUser[userIndex] = result;
             this.arrUser = [...this.arrUser];
 
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
           },
           error: err => {
             console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         });
       }
@@ -131,7 +134,11 @@ export class UserManagementComponent implements OnInit {
           this.arrUser.push(result);
           this.arrUser = [...this.arrUser];
 
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+        },
+        error: err => {
+          console.log({ err });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
         }
       })
     }

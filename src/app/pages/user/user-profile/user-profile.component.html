@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <app-header [userInput]="userDetails"></app-header>
 <section class="vh-100" style="background-color: #f4f5f7;">
   <div class="container py-5 h-100">
@@ -29,11 +31,11 @@
               <h4>{{userDetails?.name}}</h4>
             </div>
             <div class="col-md-8">
-              <div *ngIf="!isUpdatedUser; else showEditProfile" class="card">
+              <div *ngIf="!editUserForm; else showEditUserForm" class="card">
                 <div class="card-body p-4">
                   <h6>Thông tin</h6>
                   <hr class="mt-0 mb-4">
-                  <a href="#" role="button" (click)="showEditUserForm($event)">
+                  <a href="#" role="button" (click)="editUser($event)">
                     <i class="fa fa-edit"></i> Chỉnh sửa hồ sơ
                   </a>
                   <div class="row pt-4">
@@ -68,9 +70,9 @@
   </div>
 </section>
 
-<ng-template #showEditProfile>
+<ng-template #showEditUserForm>
   <!-- User profile details card-->
-  <div class="card mb-4">
+  <div class="card mb-4 border-0">
     <div class="card-body">
       <h6>Chỉnh sửa thông tin</h6>
       <hr class="mt-0 mb-4">
@@ -126,7 +128,7 @@
         </div>
         <!-- Save changes button-->
         <div class="d-flex justify-content-end">
-          <button class="btn btn-outline-danger me-2" type="button" (click)="editUserDetails()">Cập nhật</button>
+          <button class="btn btn-outline-danger me-2" type="button" (click)="clickEditUser()">Cập nhật</button>
           <button class="btn btn-outline-danger" type="button" (click)="cancelEditForm()">Hủy</button>
         </div>
       </form>

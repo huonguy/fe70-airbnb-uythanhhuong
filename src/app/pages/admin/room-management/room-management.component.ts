@@ -38,6 +38,7 @@ export class RoomManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
 
@@ -47,6 +48,7 @@ export class RoomManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
   }
@@ -70,6 +72,7 @@ export class RoomManagementComponent implements OnInit {
       },
       error: err => {
         console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
       }
     })
   }
@@ -95,10 +98,11 @@ export class RoomManagementComponent implements OnInit {
             console.log('xoa phong', result);
             this.arrRoom = this.arrRoom.filter(val => val._id !== room._id);
             this.room = {};
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Xóa thành công', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công', life: 3000 });
           },
           error: err => {
-            console.log({ err })
+            console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         })
       }
@@ -120,10 +124,11 @@ export class RoomManagementComponent implements OnInit {
             this.arrRoom[roomIndex] = result;
             this.arrRoom = [...this.arrRoom];
 
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
           },
           error: err => {
             console.log({ err });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
           }
         })
       }
@@ -137,7 +142,11 @@ export class RoomManagementComponent implements OnInit {
           this.arrRoom.push(result);
           this.arrRoom = [...this.arrRoom];
 
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+        },
+        error: err => {
+          console.log({ err });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
         }
       })
     }
@@ -166,11 +175,12 @@ export class RoomManagementComponent implements OnInit {
           this.arrRoom[roomIndex] = result;
           this.arrRoom = [...this.arrRoom];
 
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cập nhật ảnh thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật ảnh thành công.', life: 3000 });
 
         },
         error: err => {
           console.log({ err });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
         }
       })
     }
