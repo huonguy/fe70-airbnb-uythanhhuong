@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Booking } from 'src/app/_core/models/booking';
 import { Room } from 'src/app/_core/models/room';
 import { RoomService } from 'src/app/_core/services/room.service';
@@ -27,7 +27,7 @@ export class ReservePanelComponent implements OnInit {
 
   bookingInfo!: Booking;
 
-  constructor(private roomService: RoomService, private messageService: MessageService, private router: Router, private location: Location) {
+  constructor(private roomService: RoomService, private confirmationService: ConfirmationService, private messageService: MessageService, private router: Router, private location: Location) {
 
   }
 
@@ -41,6 +41,11 @@ export class ReservePanelComponent implements OnInit {
   }
 
   datPhong(): void {
+    if (this.calculateDiff(this.checkIn, this.checkOut) <= 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ngày nhận phòng và trả phòng không hợp lệ.', life: 3000 })
+      return;
+    }
+
     this.bookingInfo = {
       roomId: this.roomDetail._id,
       checkIn: this.checkIn,
@@ -51,7 +56,20 @@ export class ReservePanelComponent implements OnInit {
       next: result => {
         console.log('dat phong', result);
 
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: result.message, life: 3000 })
+        this.confirmationService.confirm({
+          message: 'Bạn có muốn tiếp tục trải nghiệm với những phòng khác?',
+          header: 'Đặt phòng thành công.',
+          icon: 'pi pi-info-circle',
+          acceptLabel: 'Có',
+          rejectLabel: 'Không',
+          accept: () => {
+            this.location.back();
+          },
+          reject: () => {
+            this.router.navigate(['/home']);
+          }
+        });
+        // this.messageService.add({ severity: 'success', summary: 'Success', detail: result.message, life: 3000 })
       },
       error: err => {
         console.log({ err });

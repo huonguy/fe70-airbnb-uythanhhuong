@@ -252,11 +252,11 @@
       <div class="card mb-3" style="max-width: 540px; border-color: transparent;">
         <div class="row g-0 align-items-center">
           <div class="col-md-1">
-            <img [src]="review.userId.avatar" class="rounded-circle" width="50" height="50" alt="...">
+            <img [src]="review.userId?.avatar" class="rounded-circle" width="50" height="50" alt="...">
           </div>
           <div class="col-md-11">
             <div class="card-body">
-              <p class="card-text mb-0">{{review.userId.name}}</p>
+              <p class="card-text mb-0">{{review.userId?.name}}</p>
               <p class="card-text"><small class="text-muted">{{review.updatedAt | date: 'dd/MM/yyyy'}}</small></p>
             </div>
           </div>
@@ -297,11 +297,11 @@
               <div class="card mb-3" style="max-width: 540px; border-color: transparent;">
                 <div class="row g-0 align-items-center">
                   <div class="col-md-1">
-                    <img [src]="review.userId.avatar" class="rounded-circle" width="50" height="50" alt="...">
+                    <img [src]="review.userId?.avatar" class="rounded-circle" width="50" height="50" alt="...">
                   </div>
                   <div class="col-md-11">
                     <div class="card-body">
-                      <p class="card-text mb-0">{{review.userId.name}}</p>
+                      <p class="card-text mb-0">{{review.userId?.name}}</p>
                       <p class="card-text"><small class="text-muted">{{review.updatedAt | date: 'dd/MM/yyyy'}}</small>
                       </p>
                     </div>

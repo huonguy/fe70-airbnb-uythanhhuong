@@ -23,7 +23,9 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   arrLocation: Location[];
   selectedLocation: Location;
 
-  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService) { }
+  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService) {
+    this.checkOut.setDate(this.checkIn.getDate() + 1)
+  }
 
   ngOnInit(): void {
     this.getScreenWidth = window.innerWidth;
@@ -62,6 +64,11 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   }
 
   searchRoom(): void {
+    if (this.calculateDiff(this.checkIn, this.checkOut) <= 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ngày nhận phòng và trả phòng không hợp lệ.', life: 3000 })
+      return;
+    }
+
     let searchParam = {
       checkIn: this.checkIn,
       checkOut: this.checkOut,
@@ -83,6 +90,14 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
 
   searchRoomWithSmallScreen(value: Location): void {
     this.router.navigate([`roomlist/${value._id}`]);
+  }
+
+  calculateDiff(cInDate: Date, cOutDate: Date) {
+    var date1 = new Date(cInDate);
+    let date2 = new Date(cOutDate);
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    return parseInt(Difference_In_Days.toString());
   }
 
   ngOnDestroy(): void {
