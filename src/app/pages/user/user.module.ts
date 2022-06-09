@@ -12,13 +12,14 @@ import { HomeModule } from '../home/home.module';
 //config route cho /user
 import { RouterModule, Routes } from '@angular/router'
 import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.module';
+import { isLoginGuard } from 'src/app/_core/services/Guard/isLogin.guard';
 
 const userRoute: Routes = [
   {
     path: '', component: UserLayoutComponent, children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'profile/:id', component: UserProfileComponent }
+      { path: 'profile/:id', component: UserProfileComponent, canActivate: [isLoginGuard] }
     ]
   }
 ]

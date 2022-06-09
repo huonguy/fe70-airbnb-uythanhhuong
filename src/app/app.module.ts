@@ -12,11 +12,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { httpApiInterceptor } from './_core/services/httpApi.interceptor';
+import { isLoginGuard } from './_core/services/Guard/isLogin.guard';
+import { isAuthenticatedGuard } from './_core/services/Guard/isAuthenticated.guard';
 
 const appRoutes: Routes = [
   { path: 'home', loadChildren: () => HomeModule },
   { path: 'user', loadChildren: () => UserModule },
-  { path: 'admin', loadChildren: () => AdminModule },
+  { path: 'admin', loadChildren: () => AdminModule, canActivate: [isLoginGuard, isAuthenticatedGuard] },
   { path: '**', redirectTo: '' }
 ]
 
