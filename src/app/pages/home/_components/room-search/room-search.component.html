@@ -12,7 +12,8 @@
               data-bs-target="#pills-diaDiem">
               <b>Địa điểm</b>
               <input type="text" class="w-100 border-0 bg-transparent text-center text-muted"
-                placeholder="Bạn sắp đi đâu?" style="outline: none;" [value]="selectedLocation?.name">
+                placeholder="Bạn sắp đi đâu?" style="outline: none;" [ngModel]="locationName"
+                (ngModelChange)="applyFilter($event)">
             </button>
           </li>
           <li class="nav-item search-item" role="presentation">
@@ -51,7 +52,7 @@
       <div class="collapse fade bg-light w-50 p-4" style="border-radius: 20px;" id="pills-diaDiem"
         data-bs-parent="#mySearch">
         <cdk-virtual-scroll-viewport [itemSize]="10">
-          <a *cdkVirtualFor="let location of arrLocation" class="diaDiemStyle" (click)="chooseLocation(location)">
+          <a *cdkVirtualFor="let location of arrLocationFilter" class="diaDiemStyle" (click)="chooseLocation(location)">
             <div class="">
               <i class="fa fa-map-marker" aria-hidden="true"></i>
             </div>
@@ -124,7 +125,7 @@
       <div class="collapse fade bg-light p-4" style="border-radius: 20px;" id="pills-diaDiem-small-screen"
         data-bs-parent="#mySearch">
         <cdk-virtual-scroll-viewport [itemSize]="10">
-          <a *cdkVirtualFor="let location of arrLocation" class="diaDiemStyle"
+          <a *cdkVirtualFor="let location of arrLocationFilter" class="diaDiemStyle"
             (click)="searchRoomWithSmallScreen(location)">
             <div class="">
               <i class="fa fa-map-marker" aria-hidden="true"></i>

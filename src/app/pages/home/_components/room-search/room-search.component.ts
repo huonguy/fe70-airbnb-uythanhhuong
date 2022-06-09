@@ -23,6 +23,9 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   arrLocation: Location[];
   selectedLocation: Location;
 
+  arrLocationFilter: Location[];
+  locationName!: string;
+
   constructor(private locationService: LocationService, private router: Router, private messageService: MessageService) {
     this.checkOut.setDate(this.checkIn.getDate() + 1)
   }
@@ -34,7 +37,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     this.locationService.layDanhSachViTri().subscribe({
       next: result => {
         console.log('danh sach vi tri', result)
-        this.arrLocation = result;
+        this.arrLocationFilter = this.arrLocation = result;
       },
       error: err => {
         console.log(err);
@@ -61,6 +64,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
 
   chooseLocation(value: Location): void {
     this.selectedLocation = value;
+    this.locationName = this.selectedLocation.name;
   }
 
   searchRoom(): void {
@@ -98,6 +102,15 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     var Difference_In_Time = date2.getTime() - date1.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
     return parseInt(Difference_In_Days.toString());
+  }
+
+  applyFilter(value: string): void {
+    if (value === '') {
+      this.arrLocationFilter = [...this.arrLocation];
+    }
+    else {
+      this.arrLocationFilter = this.arrLocation.filter(loc => loc.name?.toLowerCase().includes(value.toLowerCase()));
+    }
   }
 
   ngOnDestroy(): void {
