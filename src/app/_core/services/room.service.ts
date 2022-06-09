@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DOMAIN } from '../util/config';
 import { Room } from '../models/room';
+import { Booking } from '../models/booking';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
@@ -45,4 +46,10 @@ export class RoomService {
     let ob = this.httpClient.delete(`${DOMAIN}/api/rooms/${id}`);
     return ob;
   }
+
+  datPhong(bookingInfo: Booking): Observable<any> {
+    let ob = this.httpClient.post(`${DOMAIN}/api/rooms/booking`, bookingInfo);
+    return ob;
+  }
+
 }

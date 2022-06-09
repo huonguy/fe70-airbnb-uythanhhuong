@@ -1,0 +1,130 @@
+<p-toast></p-toast>
+<div class="reserve-panel">
+  <div class="d-flex flex-column">
+    <div class="d-flex justify-content-between align-items-center">
+      <div><span class=" fw-bolder" style="font-size: 1.5rem;">{{roomDetail?.price | number}} VND</span> / đêm
+      </div>
+      <div>
+        <i class="fa fa-star" aria-hidden="true" style="color: red"></i>
+        4.83
+        <a role="button" data-bs-toggle="modal" data-bs-target="#reviewModal">({{reviewlength}} đánh giá) </a>
+      </div>
+    </div>
+    <div class="py-3">
+      <div class="rounded-3 d-flex justify-content-between border border-secondary">
+        <div style="border-right: 1px solid;">
+          <div class="p-3">
+            <label class="fw-bold" for="nhanPhong">NHẬN PHÒNG</label>
+            <p-calendar inputId="nhanPhong" [ngModel]="checkIn | date: 'MM/dd/yyyy'" (ngModelChange)="checkIn = $event">
+            </p-calendar>
+          </div>
+        </div>
+        <div class="p-3">
+          <label class="fw-bold" for="traPhong">TRẢ PHÒNG</label>
+          <p-calendar inputId="traPhong" [ngModel]="checkOut | date: 'MM/dd/yyyy'" (ngModelChange)="checkOut=$event">
+          </p-calendar>
+        </div>
+      </div>
+      <div class="position-relative rounded-3 border border-secondary">
+        <button
+          class="collapsed themKhach-toggle px-3 py-4 border-0 bg-transparent d-flex align-items-center justify-content-between w-100"
+          data-bs-toggle="collapse" data-bs-target="#pills-themKhach">
+          <div class="text-left">
+            <label class="fw-bold">KHÁCH</label><br />
+            <span *ngIf="totalGuests(adultsNum, childrenNum) !== 0 || infantsNum!== 0 || petsNum !== 0"
+              class="text-muted">
+              {{ totalGuests(adultsNum, childrenNum) }} khách, {{infantsNum}} sơ sinh,
+              {{petsNum}} thú nuôi
+            </span>
+          </div>
+        </button>
+        <div class="tab-content position-absolute" style="z-index: 999;">
+          <div class="collapse bg-white shadow p-3 rounded-3" style="transition: all .3s;" id="pills-themKhach"
+            data-bs-parent="#mySearch">
+            <div class="d-flex justify-content-between mb-4">
+              <div class="d-flex flex-column align-items-start">
+                <label for="adults">Người lớn</label>
+                <span class="text-muted" style="font-size: .7rem;">Từ 13 tuổi trở lên</span>
+              </div>
+              <p-inputNumber [(ngModel)]="adultsNum" [showButtons]="true" buttonLayout="horizontal"
+                spinnerMode="horizontal" inputId="adults" decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus" [min]="1">
+              </p-inputNumber>
+            </div>
+            <hr style="opacity: .1;" />
+            <div class=" d-flex justify-content-between mb-4">
+              <div class="d-flex flex-column align-items-start">
+                <label for="children">Trẻ em</label>
+                <span class="text-muted" style="font-size: .7rem;">Độ tuổi 2 - 12</span>
+              </div>
+              <p-inputNumber [(ngModel)]="childrenNum" [showButtons]="true" buttonLayout="horizontal"
+                spinnerMode="horizontal" inputId="children" decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus" [min]="0">
+              </p-inputNumber>
+            </div>
+            <hr style="opacity: .1;" />
+            <div class="d-flex justify-content-between mb-4">
+              <div class="d-flex flex-column align-items-start">
+                <label for="infants">Trẻ sơ sinh</label>
+                <span class="text-muted" style="font-size: .7rem;">Dưới 2 tuổi</span>
+              </div>
+              <p-inputNumber [(ngModel)]="infantsNum" [showButtons]="true" buttonLayout="horizontal"
+                spinnerMode="horizontal" inputId="infants" decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus" [min]="0">
+              </p-inputNumber>
+            </div>
+            <hr style="opacity: .1;" />
+            <div class="d-flex justify-content-between mb-4">
+              <div class="d-flex flex-column align-items-start">
+                <label for="pets">Thú nuôi</label>
+                <span class="text-muted" style="font-size: .7rem;"><a href="#">Bạn sẽ mang theo động vật phục
+                    vụ?</a></span>
+              </div>
+              <p-inputNumber [(ngModel)]="petsNum" [showButtons]="true" buttonLayout="horizontal"
+                spinnerMode="horizontal" inputId="pets" decrementButtonClass="p-button-secondary"
+                incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus" [min]="0">
+              </p-inputNumber>
+            </div>
+            <div>
+              <span class="text-muted">Nếu bạn may mắn có nhiều hơn 2 thú cưng đi cùng, hãy nhớ cho Chủ nhà
+                biết.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="py-3">
+      <button class="w-100 reserve-btn" (click)="datPhong()">Đặt
+        phòng</button>
+    </div>
+    <span class="text-center text-muted">Bạn vẫn chưa bị trừ tiền</span>
+    <div class="d-flex justify-content-between py-2">
+      <span class="text-decoration-underline"> {{roomDetail?.price | number}} VND x {{calculateDiff(searchInfo.checkIn,
+        searchInfo.checkOut)}} đêm</span>
+      <span>VND {{roomDetail?.price * calculateDiff(searchInfo.checkIn, searchInfo.checkOut) | number}}</span>
+    </div>
+    <div class="d-flex justify-content-between">
+      <span class="text-decoration-underline">Phí dịch vụ</span>
+      <span>VND {{serviceFee | number}}</span>
+    </div>
+    <hr />
+    <div class="d-flex justify-content-between fw-bolder">
+      <span>Tổng</span>
+      <span>VND {{roomDetail?.price * calculateDiff(searchInfo.checkIn, searchInfo.checkOut) + serviceFee |
+        number}}</span>
+    </div>
+  </div>
+</div>
+<div class="d-flex align-items-center mt-3 w-100 justify-content-center">
+  <svg viewBox=" 0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false"
+    style="display: block; height: 16px; width: 16px; fill: currentcolor;">
+    <path
+      d="M28 6H17V4a2 2 0 0 0-2-2H3v28h2V18h10v2a2 2 0 0 0 2 2h11l.115-.006a1 1 0 0 0 .847-1.269L27.039 14l1.923-6.724A1 1 0 0 0 28 6z">
+    </path>
+  </svg>
+  <a href="#" class="text-muted ms-2">Báo cáo nhà/phòng cho thuê này.</a>
+</div>

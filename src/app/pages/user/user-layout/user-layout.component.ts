@@ -1,5 +1,5 @@
 import { Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Message, MessageService } from 'primeng/api';
 import { filter } from 'rxjs';
 
@@ -8,7 +8,7 @@ import { filter } from 'rxjs';
   templateUrl: './user-layout.component.html',
   styleUrls: ['./user-layout.component.scss']
 })
-export class UserLayoutComponent implements OnInit, DoCheck {
+export class UserLayoutComponent implements OnInit {
   @ViewChild('container') container!: ElementRef;
 
   requestURL: string | undefined;
@@ -17,25 +17,11 @@ export class UserLayoutComponent implements OnInit, DoCheck {
   }
 
   ngOnInit(): void {
-    this.requestURL = this.router.url.replace('/user/', '');
+    this.requestURL = this.router.url;
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val) => {
-      this.requestURL = val['url'].replace('/user/', '');
+      this.requestURL = val['url'];
     })
-  }
-
-  ngDoCheck(): void {
-    this.checkRequestUrl();
-  }
-
-  checkRequestUrl(): void {
-    if (this.container) {
-      this.requestURL === 'login' ?
-        this.container.nativeElement.classList.remove("right-panel-active") : '';
-
-      this.requestURL === 'register' ?
-        this.container.nativeElement.classList.add("right-panel-active") : '';
-    }
   }
 
   signUp(): void {

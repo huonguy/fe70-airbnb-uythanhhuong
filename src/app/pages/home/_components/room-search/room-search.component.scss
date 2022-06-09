@@ -53,15 +53,27 @@
 }
 
 .diaDiemStyle {
-  border: 1px solid none;
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.04);
-  margin-right: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  color: black;
+
+  &:hover{
+    color: #6c757d!important;
+  }
+div
+{
+    border: 1px solid none;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.04);
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 :host ::ng-deep .p-virtualscroller-content {

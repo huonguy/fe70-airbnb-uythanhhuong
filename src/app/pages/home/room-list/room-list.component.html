@@ -1,7 +1,7 @@
 <div class="container">
-  <div class="row">
-    <div class="col-7 mt-4">
-      <p>Hơn 3000 chỗ ở 16 thg 4 - 14 thg 5</p>
+  <div class="d-flex">
+    <div class="mt-4">
+      <p>{{arrRoom?.length}} chỗ ở {{checkIn | date: 'dd/MM'}} - {{checkOut | date: 'dd/MM'}}</p>
       <h2>Chỗ ở tại khu vực bản đồ đã chọn</h2>
       <div class="py-4">
         <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Loại nơi
@@ -16,31 +16,29 @@
           khác</button>
       </div>
       <div *ngFor="let room of arrRoom | paginate: { itemsPerPage: 3, currentPage: cp}" class="card mb-3 border-0">
-        <div class=" row g-0" style="border-bottom: 1px solid rgba(0,0,0,.1);">
-          <div class="col-md-5">
-            <img [src]="room.image || imageDefault" class="rounded-start img-fluid" alt="...">
+        <div class="d-flex flex-wrap" style="border-bottom: 1px solid rgba(0,0,0,.1);">
+          <img [src]="room.image || imageDefault" class="rounded-start img-fluid" alt="...">
+          <div class="card-body w-50">
+            <a type="button" (click)="goRoomDetail(room)">
+              <p class="card-text"><small class="text-muted">Toàn bộ căn hộ dịch vụ tại
+                  {{room.locationId.name}},{{room.locationId.province}}</small></p>
+              <h5 class="card-title">{{room.name}}</h5>
+              <hr style="width: 2rem; opacity: .2" />
+              <p class="card-text">{{room.guests}} khách. {{room.bedRoom}} giường. {{room.bath}} phòng tắm
+                <br />{{room.wifi ? 'Wifi. ':''}}{{room.kitchen ? 'Bếp. ':''}}{{room.hotTub ? 'Bồn nước nóng.
+                ':''}}{{room.heating ? 'Lò sưởi. ': ''}}
+              </p>
+              <p class="text-end"><b>{{room.price | number}} VND</b>/tháng</p>
+            </a>
           </div>
-          <div class="col-md-7">
-            <div class="card-body">
-              <a type="button" (click)="goRoomDetail(room)">
-                <p class="card-text"><small class="text-muted">Toàn bộ căn hộ dịch vụ tại
-                    {{room.locationId.name}},{{room.locationId.province}}</small></p>
-                <h5 class="card-title">{{room.name}}</h5>
-                <hr style="width: 2rem; opacity: .2" />
-                <p class="card-text">{{room.guests}} khách. {{room.bedRoom}} giường. {{room.bath}} phòng tắm
-                  <br />{{room.wifi ? 'Wifi. ':''}}{{room.kitchen ? 'Bếp. ':''}}{{room.hotTub ? 'Bồn nước nóng.
-                  ':''}}{{room.heating ? 'Lò sưởi. ': ''}}
-                </p>
-                <p class="text-end"><b>{{room.price | number}}</b>/tháng</p>
-              </a>
-            </div>
-          </div>
+
         </div>
       </div>
 
-      <pagination-controls class="d-flex justify-content-end" (pageChange)="cp = $event"></pagination-controls>
+      <pagination-controls class="d-flex justify-content-end" (pageChange)="cp = $event" nextLabel="" previousLabel="">
+      </pagination-controls>
     </div>
-    <div class="col-5">
+    <div class="d-none d-lg-flex w-50">
       <iframe class="w-100 h-100"
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.8985295283487!2d106.609835113768!3d10.742303362762533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752d3e5d6690e3%3A0x71aa1d7a23dac08!2zQUVPTiBNQUxMIELDrG5oIFTDom4gLSBD4buVbmcgTmjhuq1wIEjDoG5nIChD4buVbmcgc-G7kSAxKQ!5e0!3m2!1sen!2s!4v1652959271539!5m2!1sen!2s"
         height="" style="border:0;" allowfullscreen="" loading="lazy"

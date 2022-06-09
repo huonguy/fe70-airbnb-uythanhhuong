@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { Review } from 'src/app/_core/models/review';
 import { Room } from 'src/app/_core/models/room';
 import { ReviewService } from 'src/app/_core/services/review.service';
@@ -13,7 +15,10 @@ import { RoomService } from 'src/app/_core/services/room.service';
   styleUrls: ['./room-detail.component.scss']
 })
 
-export class RoomDetailComponent implements OnInit {
+export class RoomDetailComponent implements OnInit, OnDestroy {
+  subParam!: Subscription;
+  subParam2!: Subscription;
+
   amenities = [
     { name: 'elevator', value: 'Thang máy', img: 'M25 1a2 2 0 0 1 1.995 1.85L27 3l-.001 26H29v2H3v-2h1.999L5 3a2 2 0 0 1 1.85-1.995L7 1zm0 2H7l-.001 26h18zm-3 12a1 1 0 1 1 0 2 1 1 0 0 1 0-2z' },
     { name: 'hotTub', value: 'Bồn nước nóng', img: 'M16 32c6.627 0 12-5.373 12-12 0-6.218-3.671-12.51-10.924-18.889L16 .18l-1.076.932C7.671 7.491 4 13.782 4 20c0 6.577 5.397 12 12 12zm0-2c-5.496 0-10-4.525-10-10 0-5.327 3.115-10.882 9.424-16.65l.407-.37.169-.149.576.518c6.043 5.526 9.156 10.855 9.407 15.977l.013.34L26 20c0 5.523-4.477 10-10 10zm-3.452-5.092a8.954 8.954 0 0 1 2.127-4.932l.232-.26.445-.462a6.973 6.973 0 0 0 1.827-4.416l.007-.306-.006-.307-.007-.11a6.03 6.03 0 0 0-2.009-.057 4.979 4.979 0 0 1-1.443 4.008 10.951 10.951 0 0 0-2.87 5.016 6.034 6.034 0 0 0 1.697 1.826zM16 26l.253-.005.25-.016-.003-.137c0-1.32.512-2.582 1.464-3.533a10.981 10.981 0 0 0 3.017-5.656 6.026 6.026 0 0 0-1.803-1.743 8.971 8.971 0 0 1-2.172 5.493l-.228.255-.444.462a6.96 6.96 0 0 0-1.827 4.415l-.006.276c.48.123.982.189 1.499.189z' },
@@ -27,21 +32,26 @@ export class RoomDetailComponent implements OnInit {
     { name: 'cableTV', value: 'Truyền hình cáp', img: 'M9 29v-2h2v-2H6a5 5 0 0 1-4.995-4.783L1 20V8a5 5 0 0 1 4.783-4.995L6 3h20a5 5 0 0 1 4.995 4.783L31 8v12a5 5 0 0 1-4.783 4.995L26 25h-5v2h2v2zm10-4h-6v2h6zm7-20H6a3 3 0 0 0-2.995 2.824L3 8v12a3 3 0 0 0 2.824 2.995L6 23h20a3 3 0 0 0 2.995-2.824L29 20V8a3 3 0 0 0-2.824-2.995z' }
   ];
 
-  items: SelectItem[];
-  item: string;
-  date1: Date = new Date();
-  date2: Date = new Date();
-
   roomDetail: Room;
   roomId: string;
   arrReview: Review[];
 
   showMoreDescription: boolean = false;
+  searchInfo: any = {};
 
-  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private reviewService: ReviewService, private router: Router) {
-    this.atvRoute.params.subscribe(params => {
+  items: MenuItem[];
+  home: MenuItem;
+
+  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private reviewService: ReviewService, private router: Router, private location: Location) {
+    this.subParam = this.atvRoute.params.subscribe(params => {
       this.roomId = params['id'];
       console.log('roomId', this.roomId);
+    })
+
+    this.subParam2 = this.atvRoute.queryParams.subscribe(params => {
+      console.log('query params', params)
+      this.searchInfo = params;
+      console.log('this.searchInfo', this.searchInfo)
     })
   }
 
@@ -71,5 +81,15 @@ export class RoomDetailComponent implements OnInit {
 
   clickShowMore(): void {
     this.showMoreDescription = !this.showMoreDescription;
+  }
+
+  ngOnDestroy(): void {
+    if (this.subParam) {
+      this.subParam.unsubscribe();
+    }
+
+    if (this.subParam2) {
+      this.subParam2.unsubscribe();
+    }
   }
 }

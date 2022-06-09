@@ -4,7 +4,8 @@
 
 <div class="uLayout">
   <ng-template #otherContent>
-    <div #container class="container" id="container">
+    <div #container class="container" id="container"
+      [ngClass]="{'right-panel-active': requestURL.includes('register')}">
       <div class="form-container sign-in-container">
         <app-login></app-login>
       </div>

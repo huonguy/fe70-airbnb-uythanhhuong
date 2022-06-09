@@ -75,7 +75,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.userService.capNhatNguoiDung(this.userDetails._id, this.userDetails).subscribe({
       next: resutl => {
         // console.log('cap nhat nguoi dung', resutl);
-
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công!', life: 3000 })
       },
       error: err => {

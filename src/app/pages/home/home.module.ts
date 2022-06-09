@@ -17,6 +17,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 //cấu hình route cho /home
 import { RouterModule, Routes } from '@angular/router';
+import { ReservePanelComponent } from './room-detail/reserve-panel/reserve-panel.component';
 
 const homeRoutes: Routes = [
   {
@@ -38,6 +39,7 @@ const homeRoutes: Routes = [
     HomeComponent,
     CarouselComponent,
     RoomSearchComponent,
+    ReservePanelComponent,
   ],
   imports: [
     CommonModule,

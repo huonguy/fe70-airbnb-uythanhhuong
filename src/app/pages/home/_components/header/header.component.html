@@ -2,7 +2,8 @@
   class="navbar navbar-expand-lg p-4">
   <div class="container">
     <a class="navbar-brand" href="/">
-      <svg width="102" height="32" [attr.fill]="logoColor" style="display: block;
+      <svg width="102" height="32" [attr.fill]="(requestUrl === 'home' || requestUrl === '') ? '#fff' : '#FF385C'"
+        style="display: block;
         cursor: pointer;">
         <path d="M29.24
           22.68c-.16-.39-.31-.8-.47-1.15l-.74-1.67-.03-.03c-2.2-4.8-4.55-9.68-7.04-14.48l-.1-.2c-.25-.47-.5-.99-.76-1.47-.32-.57-.63-1.18-1.14-1.76a5.3
@@ -71,7 +72,7 @@
       </svg>
     </a>
 
-    <ng-container *ngIf="(requestUrl === 'home' || requestUrl === '')">
+    <ng-container *ngIf="(requestUrl === 'home' || requestUrl === ''); else midSide">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -92,17 +93,22 @@
       </div>
     </ng-container>
 
+    <ng-template #midSide>
+
+    </ng-template>
+
     <div class="d-none d-lg-block position-relative">
       <div class="d-flex align-items-center">
         <a [ngClass]="{'blackStyle' : !(requestUrl === 'home' || requestUrl === '')}" class="welcomeGuest nav-link"
-          href="#">Đón tiếp khách</a>
+          href="#">{{!isLogged? 'Đón tiếp khách':'Trở thành chủ nhà'}}</a>
 
         <button [ngClass]="{'blackStyle' : !(requestUrl === 'home' || requestUrl === '')}"
           class="bg-transparent border-0 language" data-bs-toggle="tooltip" data-bs-placement="bottom"
           title="Chọn ngôn ngữ">
           <div class="">
             <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation"
-              focusable="false" [attr.fill]="languageColor" style="display: block; height: 16px; width: 16px">
+              focusable="false" [attr.fill]="(requestUrl === 'home' || requestUrl === '')?'#fff':'#000000'"
+              style="display: block; height: 16px; width: 16px">
               <path d="m8.002.25a7.77 7.77 0 0 1 7.748 7.776 7.75 7.75 0 0 1 -7.521
                 7.72l-.246.004a7.75 7.75 0 0 1 -7.73-7.513l-.003-.245a7.75 7.75
                 0

@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, DoCheck, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { filter } from 'rxjs';
 import { User } from 'src/app/_core/models/user';
 import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
 
@@ -9,7 +10,7 @@ import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
+export class HeaderComponent implements OnInit, OnChanges {
   @Input() userInput: User;
   noAvatar: string = '../../../../../assets/images/no-profile-picture.png';
   isLogged: boolean = false;
@@ -17,8 +18,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
   requestUrl: string | undefined;
   user: User;
 
-  logoColor: string = '#FF385C';
-  languageColor: string = '#000000;'
+  logoColor: string;
+  languageColor: string;
 
   constructor(private router: Router, private confirmationService: ConfirmationService) { }
   ngOnChanges(changes: SimpleChanges): void {
@@ -30,9 +31,21 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     this.requestUrl = this.router.url.substring(1);
-    if (this.requestUrl === 'home' || this.requestUrl === '') {
-      this.logoColor = this.languageColor = '#fff';
-    }
+    // console.log(this.logoColor)
+    // console.log(this.languageColor)
+
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val) => {
+      this.requestUrl = val['url'];
+      // console.log('url nek', this.requestUrl);
+
+      // if (this.requestUrl === 'home' || this.requestUrl === '') {
+      //   this.logoColor = this.languageColor = '#fff';
+      // }
+      // else {
+      //   this.logoColor = '#FF385C';
+      //   this.languageColor = '#000000';
+      // }
+    })
 
     if (localStorage.getItem(USER_LOGIN)) {
       this.isLogged = true;
@@ -41,10 +54,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnChanges {
     else {
       this.isLogged = false;
     }
-  }
-
-  ngAfterViewInit(): void {
-
   }
 
   toggleProfile(): void {

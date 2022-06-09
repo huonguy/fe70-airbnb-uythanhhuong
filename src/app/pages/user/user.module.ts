@@ -11,7 +11,6 @@ import { HomeModule } from '../home/home.module';
 
 //config route cho /user
 import { RouterModule, Routes } from '@angular/router'
-import { NgBootstrapModule } from 'src/app/_core/common/_modules/ngbootstrap/ngbootstrap.module';
 import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.module';
 
 const userRoute: Routes = [
@@ -35,7 +34,6 @@ const userRoute: Routes = [
     CommonModule,
     FormsModule,
     HomeModule,
-    NgBootstrapModule,
     PrimengModule,
     RouterModule.forChild(userRoute)
   ],

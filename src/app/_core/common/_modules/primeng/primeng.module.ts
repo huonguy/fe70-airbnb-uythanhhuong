@@ -21,6 +21,7 @@ import { VirtualScrollerModule } from 'primeng/virtualscroller';
 import { TooltipModule } from 'primeng/tooltip';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { PasswordModule } from "primeng/password";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 @NgModule({
   declarations: [],
@@ -46,7 +47,8 @@ import { PasswordModule } from "primeng/password";
     VirtualScrollerModule,
     TooltipModule,
     RadioButtonModule,
-    PasswordModule
+    PasswordModule,
+    BreadcrumbModule
   ],
   exports: [
     CalendarModule,
@@ -70,7 +72,8 @@ import { PasswordModule } from "primeng/password";
     VirtualScrollerModule,
     TooltipModule,
     RadioButtonModule,
-    PasswordModule
+    PasswordModule,
+    BreadcrumbModule
   ]
 })
 export class PrimengModule { }

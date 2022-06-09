@@ -9,66 +9,63 @@ hr {
 
 // image style
 .img-container-grid{
-  display:flex;
+  // display:flex;
   flex-wrap: wrap;
-}
 
-.smallsquare{
-  max-width:20%;
-  height:auto;
-  flex:0 0 20%;
-  padding-top:20%;
-  display:grid;
-  position:relative;
-}
+  .smallsquare{
+    max-width:20%;
+    height:auto;
+    flex:0 0 20%;
+    padding-top:20%;
+    display:grid;
+    position:relative;
+  }
 
-.h_rectangle{
-  max-width: 40%;
-  flex: 0 0 40%;
-  padding-top:20%;
-  position:relative;
-}
+  .h_rectangle{
+    max-width: 40%;
+    flex: 0 0 40%;
+    padding-top:20%;
+    position:relative;
+  }
 
-.bigsquare{
-  max-width:60%;
-  height:auto;
-  flex:0 0 60%;
-  padding-top:40%;
-  display:grid;
-  position:relative;
-}
-.bigsquare_blank{
-  max-width:40%;
-  height:auto;
-  flex:0 0 40%;
-  display:flex;
-  flex-wrap: wrap;
-}
-.inner_square{
-  max-width:50%;
-  flex: 0 0 50%;
-  height:50%;
-  position:relative;
-}
-.v_rectangle{
-  max-width: 20%;
-  flex: 0 0 20%;
-  padding-top:40%;
-  position:relative;
-}
+  .bigsquare{
+    max-width:60%;
+    height:auto;
+    flex:0 0 60%;
+    padding-top:40%;
+    display:grid;
+    position:relative;
+  }
+  .bigsquare_blank{
+    max-width:40%;
+    height:auto;
+    flex:0 0 40%;
+    display:flex;
+    flex-wrap: wrap;
+  }
+  .inner_square{
+    max-width:50%;
+    flex: 0 0 50%;
+    height:50%;
+    position:relative;
+  }
+  .v_rectangle{
+    max-width: 20%;
+    flex: 0 0 20%;
+    padding-top:40%;
+    position:relative;
+  }
 
-.img-grid-c{
-  width:100%;
-  height:100%;
-  top:0;
-  left:0;
-  position:absolute;
-  object-fit:cover;
-  object-position:center;
-  padding:2.5px;
-}
-.reserve-panel {
-  border: 1px solid rgb(221, 221, 221); border-radius: 12px; padding: 24px; box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+  .img-grid-c{
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    position:absolute;
+    object-fit:cover;
+    object-position:center;
+    padding:2.5px;
+  }
 }
 
 .reserve-btn{
@@ -80,10 +77,10 @@ hr {
   cursor: pointer;
   padding: 14px 24px;
   font-weight: 600;
-}
 
-.reserve-btn:hover {
-  background-position: right center;
+  &:hover {
+    background-position: right center;
+  }
 }
 
 :host ::ng-deep .p-dropdown {
@@ -99,4 +96,12 @@ hr {
 cdk-virtual-scroll-viewport {
   height: 400px;
   }
+
+:host ::ng-deep .p-inputnumber-buttons-horizontal .p-inputnumber-input {
+  width: 70px !important;
+}
+
+:host ::ng-deep .p-breadcrumb {
+  border: 0;
+}
 
