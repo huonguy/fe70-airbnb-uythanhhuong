@@ -1,15 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { takeUntil } from 'rxjs';
+import { roles } from 'src/app/_core/constants/roles';
 import { User } from 'src/app/_core/models/user';
 import { UserService } from 'src/app/_core/services/user.service';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss'],
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent extends Destroyable implements OnInit {
   imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   headerDialog!: string;
   actionBtnDialog!: string;
@@ -25,10 +28,12 @@ export class UserManagementComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | undefined;
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private userService: UserService) { }
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private userService: UserService) {
+    super()
+  }
 
   ngOnInit() {
-    this.userService.layDanhSachNguoiDungPhanTrang().subscribe({
+    this.userService.layDanhSachNguoiDungPhanTrang().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach nguoi dung', result);
         this.arrUser = result;
@@ -38,10 +43,7 @@ export class UserManagementComponent implements OnInit {
       }
     });
 
-    this.roleList = [
-      { label: 'KHÁCH HÀNG', value: 'CLIENT' },
-      { label: 'QUẢN TRỊ VIÊN', value: 'ADMIN' },
-    ];
+    this.roleList = roles
   }
 
   addNewUser() {
@@ -56,7 +58,7 @@ export class UserManagementComponent implements OnInit {
   viewDetailUser(userId: string) {
     this.viewDetailDialog = true;
 
-    this.userService.layThongtinNguoiDung(userId).subscribe({
+    this.userService.layThongtinNguoiDung(userId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('thong tin nguoi dung', result);
         this.user = result;
@@ -84,7 +86,7 @@ export class UserManagementComponent implements OnInit {
       acceptLabel: 'Có',
       rejectLabel: 'Không',
       accept: () => {
-        this.userService.xoaNguoiDung(user._id).subscribe({
+        this.userService.xoaNguoiDung(user._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('xoa nguoi dung', result);
             this.arrUser = this.arrUser.filter(val => val._id !== user._id);
@@ -112,7 +114,7 @@ export class UserManagementComponent implements OnInit {
     if (this.user._id) {
       let userIndex = this.arrUser.findIndex(u => u._id === this.user._id);
       if (userIndex !== -1) {
-        this.userService.capNhatNguoiDung(this.user._id, this.user).subscribe({
+        this.userService.capNhatNguoiDung(this.user._id, this.user).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('cap nhat nguoi dung', result);
             this.arrUser[userIndex] = result;
@@ -128,7 +130,7 @@ export class UserManagementComponent implements OnInit {
       }
     }
     else {
-      this.userService.taoNguoiDung(this.user).subscribe({
+      this.userService.taoNguoiDung(this.user).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
           console.log('tạo người dùng', result);
           this.arrUser.push(result);

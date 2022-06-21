@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { filter } from 'rxjs';
+import { filter, takeUntil } from 'rxjs';
 import { User } from 'src/app/_core/models/user';
 import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 declare var $: any;
 
@@ -12,8 +13,10 @@ declare var $: any;
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss']
 })
-export class AdminLayoutComponent implements OnInit, AfterViewInit {
-  constructor(private router: Router, private confirmationService: ConfirmationService) { }
+export class AdminLayoutComponent extends Destroyable implements OnInit, AfterViewInit {
+  constructor(private router: Router, private confirmationService: ConfirmationService) {
+    super()
+  }
   user!: User;
   noAvatar: string = '../../../../assets/images/no-profile-picture.png';
   scrollTopSection!: string;
@@ -23,7 +26,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
       this.user = JSON.parse(localStorage.getItem(USER_LOGIN));
     }
 
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((pageSection) => {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).pipe(takeUntil(this.destroy$)).subscribe((pageSection) => {
       this.scrollTopSection = pageSection['url'].split('#')[0];
     })
 

@@ -1,7 +1,8 @@
 <div class="container">
   <div class="d-flex">
     <div class="mt-4">
-      <p>{{arrRoom?.length}} chỗ ở {{checkIn | date: 'dd/MM'}} - {{checkOut | date: 'dd/MM'}}</p>
+      <p>{{arrRoom?.length}} chỗ ở {{searchInfo?.checkIn | date: 'dd/MM'}} - {{searchInfo?.checkOut | date: 'dd/MM'}}
+      </p>
       <h2>Chỗ ở tại khu vực bản đồ đã chọn</h2>
       <div class="py-4">
         <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Loại nơi

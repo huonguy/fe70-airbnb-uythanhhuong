@@ -22,6 +22,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { PasswordModule } from "primeng/password";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [],
@@ -74,6 +75,10 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
     RadioButtonModule,
     PasswordModule,
     BreadcrumbModule
+  ],
+  providers: [
+    MessageService,
+    ConfirmationService
   ]
 })
 export class PrimengModule { }

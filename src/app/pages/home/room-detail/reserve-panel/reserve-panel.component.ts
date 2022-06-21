@@ -2,6 +2,8 @@ import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { takeUntil } from 'rxjs';
+import { Destroyable } from 'src/app/pages/_directives/Destroyable.directive';
 import { Booking } from 'src/app/_core/models/booking';
 import { Room } from 'src/app/_core/models/room';
 import { RoomService } from 'src/app/_core/services/room.service';
@@ -11,7 +13,7 @@ import { RoomService } from 'src/app/_core/services/room.service';
   templateUrl: './reserve-panel.component.html',
   styleUrls: ['./reserve-panel.component.scss']
 })
-export class ReservePanelComponent implements OnInit {
+export class ReservePanelComponent extends Destroyable implements OnInit {
   @Input() roomDetail: Room;
   @Input() reviewlength: number;
   @Input() searchInfo: any;
@@ -28,7 +30,7 @@ export class ReservePanelComponent implements OnInit {
   bookingInfo!: Booking;
 
   constructor(private roomService: RoomService, private confirmationService: ConfirmationService, private messageService: MessageService, private router: Router, private location: Location) {
-
+    super()
   }
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class ReservePanelComponent implements OnInit {
       checkOut: this.checkOut
     };
 
-    this.roomService.datPhong(this.bookingInfo).subscribe({
+    this.roomService.datPhong(this.bookingInfo).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('dat phong', result);
 

@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { filter } from 'rxjs';
+import { filter, takeUntil } from 'rxjs';
+import { Destroyable } from 'src/app/pages/_directives/Destroyable.directive';
 import { User } from 'src/app/_core/models/user';
 import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
 
@@ -10,7 +11,7 @@ import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnChanges {
+export class HeaderComponent extends Destroyable implements OnInit, OnChanges {
   @Input() userInput: User;
   noAvatar: string = '../../../../../assets/images/no-profile-picture.png';
   isLogged: boolean = false;
@@ -21,7 +22,10 @@ export class HeaderComponent implements OnInit, OnChanges {
   logoColor: string;
   languageColor: string;
 
-  constructor(private router: Router, private confirmationService: ConfirmationService) { }
+  constructor(private router: Router, private confirmationService: ConfirmationService) {
+    super()
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.userInput) {
       this.user = this.userInput;
@@ -31,20 +35,9 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.requestUrl = this.router.url.substring(1);
-    // console.log(this.logoColor)
-    // console.log(this.languageColor)
 
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((val) => {
+    this.router.events.pipe(takeUntil(this.destroy$), filter(event => event instanceof NavigationEnd)).subscribe((val) => {
       this.requestUrl = val['url'];
-      // console.log('url nek', this.requestUrl);
-
-      // if (this.requestUrl === 'home' || this.requestUrl === '') {
-      //   this.logoColor = this.languageColor = '#fff';
-      // }
-      // else {
-      //   this.logoColor = '#FF385C';
-      //   this.languageColor = '#000000';
-      // }
     })
 
     if (localStorage.getItem(USER_LOGIN)) {

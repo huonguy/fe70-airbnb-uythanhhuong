@@ -1,12 +1,16 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem, SelectItem } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { takeUntil } from 'rxjs';
+import { amenities } from 'src/app/_core/constants/amenities';
 import { Review } from 'src/app/_core/models/review';
 import { Room } from 'src/app/_core/models/room';
+import { SearchInfo, searchInfo } from 'src/app/_core/models/search-info';
 import { ReviewService } from 'src/app/_core/services/review.service';
 import { RoomService } from 'src/app/_core/services/room.service';
+import { TransformDataService } from 'src/app/_core/services/transform-data.service';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 
 @Component({
@@ -15,49 +19,32 @@ import { RoomService } from 'src/app/_core/services/room.service';
   styleUrls: ['./room-detail.component.scss']
 })
 
-export class RoomDetailComponent implements OnInit, OnDestroy {
-  subParam!: Subscription;
-  subParam2!: Subscription;
-
-  amenities = [
-    { name: 'elevator', value: 'Thang máy', img: 'M25 1a2 2 0 0 1 1.995 1.85L27 3l-.001 26H29v2H3v-2h1.999L5 3a2 2 0 0 1 1.85-1.995L7 1zm0 2H7l-.001 26h18zm-3 12a1 1 0 1 1 0 2 1 1 0 0 1 0-2z' },
-    { name: 'hotTub', value: 'Bồn nước nóng', img: 'M16 32c6.627 0 12-5.373 12-12 0-6.218-3.671-12.51-10.924-18.889L16 .18l-1.076.932C7.671 7.491 4 13.782 4 20c0 6.577 5.397 12 12 12zm0-2c-5.496 0-10-4.525-10-10 0-5.327 3.115-10.882 9.424-16.65l.407-.37.169-.149.576.518c6.043 5.526 9.156 10.855 9.407 15.977l.013.34L26 20c0 5.523-4.477 10-10 10zm-3.452-5.092a8.954 8.954 0 0 1 2.127-4.932l.232-.26.445-.462a6.973 6.973 0 0 0 1.827-4.416l.007-.306-.006-.307-.007-.11a6.03 6.03 0 0 0-2.009-.057 4.979 4.979 0 0 1-1.443 4.008 10.951 10.951 0 0 0-2.87 5.016 6.034 6.034 0 0 0 1.697 1.826zM16 26l.253-.005.25-.016-.003-.137c0-1.32.512-2.582 1.464-3.533a10.981 10.981 0 0 0 3.017-5.656 6.026 6.026 0 0 0-1.803-1.743 8.971 8.971 0 0 1-2.172 5.493l-.228.255-.444.462a6.96 6.96 0 0 0-1.827 4.415l-.006.276c.48.123.982.189 1.499.189z' },
-    { name: 'pool', value: 'Hồ bơi', img: 'M24 26c.988 0 1.945.351 2.671 1.009.306.276.71.445 1.142.483L28 27.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 28c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 28c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 28c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 29.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 26c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492A3.974 3.974 0 0 1 16 26c.988 0 1.945.351 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.491A3.975 3.975 0 0 1 23.999 26zm0-5c.988 0 1.945.351 2.671 1.009.306.276.71.445 1.142.483L28 22.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 23c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 23c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 23c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 24.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 21c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492A3.974 3.974 0 0 1 16 21c.988 0 1.945.351 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.491A3.975 3.975 0 0 1 23.999 21zM20 3a4 4 0 0 1 3.995 3.8L24 7v2h4v2h-4v5c.912 0 1.798.3 2.5.862l.171.147c.306.276.71.445 1.142.483L28 17.5v2l-.228-.006a3.96 3.96 0 0 1-2.443-1.003A1.978 1.978 0 0 0 24 18c-.502 0-.978.175-1.328.491a3.977 3.977 0 0 1-2.67 1.009 3.977 3.977 0 0 1-2.672-1.009A1.978 1.978 0 0 0 16 18c-.503 0-.98.175-1.329.491a3.978 3.978 0 0 1-2.67 1.009 3.978 3.978 0 0 1-2.672-1.008A1.978 1.978 0 0 0 8 18c-.503 0-.98.175-1.33.491a3.96 3.96 0 0 1-2.442 1.003L4 19.5v-2l.187-.008a1.953 1.953 0 0 0 1.142-.483A3.975 3.975 0 0 1 8 16c.988 0 1.945.352 2.671 1.009.35.316.826.49 1.33.491.502 0 .979-.175 1.328-.492a3.956 3.956 0 0 1 2.444-1.002L16 16v-5H4V9h12V7a2 2 0 0 0-3.995-.15L12 7h-2a4 4 0 0 1 7-2.645A3.985 3.985 0 0 1 20 3zm-2 13.523c.16.091.313.194.459.307l.212.179c.35.316.826.49 1.33.491.439 0 .86-.134 1.191-.38l.137-.111c.206-.187.431-.35.67-.486V11h-4zM20 5a2 2 0 0 0-1.995 1.85L18 7v2h4V7a2 2 0 0 0-2-2z' },
-    { name: 'indoorFireplace', value: 'Lò sưởi trong nhà', img: 'm31 6v2h-1v23h-6v-18h-16v18h-6v-23h-1v-2zm-15.368 8.991.959.702c3.317 2.43 5.141 5.07 5.382 7.934l.02.287.005.207.002.138c0 3.183-2.698 5.741-6 5.741-3.168 0-5.789-2.358-5.988-5.387l-.01-.218-.002-.147c.004-1.629.557-3.29 1.64-4.985l.224-.34.677-.98 1.238.783zm12.368-6.991h-24v21h2v-16a2 2 0 0 1 1.697-1.977l.154-.018.149-.005h16a2 2 0 0 1 1.995 1.85l.005.15v16h2zm-12 17.355-.092.093c-.62.655-.908 1.233-.908 1.719 0 .428.413.833 1 .833s1-.405 1-.833c0-.445-.242-.968-.76-1.556l-.148-.163zm.351-7.315-1.766 3.562-1.466-.927-.152.265c-.534.96-.844 1.878-.937 2.749l-.023.289-.007.26.001.118c.025.92.408 1.761 1.024 2.403.14-1.137.86-2.237 2.097-3.324l.238-.203.64-.534.64.534c1.384 1.153 2.188 2.32 2.335 3.528a3.593 3.593 0 0 0 1.018-2.27l.007-.218-.006-.28c-.088-1.865-1.113-3.702-3.129-5.51l-.268-.236zm14.649-16.04v2h-30v-2z' },
-    { name: 'dryer', value: 'Máy sấy tóc', img: 'M14 27l-.005.2a4 4 0 0 1-3.789 3.795L10 31H4v-2h6l.15-.005a2 2 0 0 0 1.844-1.838L12 27zM10 1c.536 0 1.067.047 1.58.138l.38.077 17.448 3.64a2 2 0 0 1 1.585 1.792l.007.166v6.374a2 2 0 0 1-1.431 1.917l-.16.04-13.554 2.826 1.767 6.506a2 2 0 0 1-1.753 2.516l-.177.008H11.76a2 2 0 0 1-1.879-1.315l-.048-.15-1.88-6.769A9 9 0 0 1 10 1zm5.692 24l-1.799-6.621-1.806.378a8.998 8.998 0 0 1-1.663.233l-.331.008L11.76 25zM10 3a7 7 0 1 0 1.32 13.875l.331-.07L29 13.187V6.813L11.538 3.169A7.027 7.027 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z' },
-    { name: 'gym', value: 'Phòng thể dục', img: 'M26 1a2 2 0 0 1 1.995 1.85L28 3v11h2v2h-2v6h2v2h-2v5h2v2H2v-2h2v-5H2v-2h2v-6H2v-2h2V3a2 2 0 0 1 1.85-1.995L6 1h20zM11 24H6v5h5v-5zm8 0h-6v5h6v-5zm7 0h-5v5h5v-5zm-15-8H6v6h5v-6zm8 0h-6v6h6v-6zm7 0h-5v6h5v-6zm0-13H6v11h5v-3h2v3h6v-3h2v3h5V3z' },
-    { name: 'kitchen', value: 'Nhà bếp', img: 'M26 1a5 5 0 0 1 5 5c0 6.389-1.592 13.187-4 14.693V31h-2V20.694c-2.364-1.478-3.942-8.062-3.998-14.349L21 6l.005-.217A5 5 0 0 1 26 1zm-9 0v18.118c2.317.557 4 3.01 4 5.882 0 3.27-2.183 6-5 6s-5-2.73-5-6c0-2.872 1.683-5.326 4-5.882V1zM2 1h1c4.47 0 6.934 6.365 6.999 18.505L10 21H3.999L4 31H2zm14 20c-1.602 0-3 1.748-3 4s1.398 4 3 4 3-1.748 3-4-1.398-4-3-4zM4 3.239V19h3.995l-.017-.964-.027-.949C7.673 9.157 6.235 4.623 4.224 3.364l-.12-.07zm19.005 2.585L23 6l.002.31c.045 4.321 1.031 9.133 1.999 11.39V3.17a3.002 3.002 0 0 0-1.996 2.654zm3.996-2.653v14.526C27.99 15.387 29 10.4 29 6a3.001 3.001 0 0 0-2-2.829z' },
-    { name: 'wifi', value: 'Wifi', img: 'm15.9999 20.33323c2.0250459 0 3.66667 1.6416241 3.66667 3.66667s-1.6416241 3.66667-3.66667 3.66667-3.66667-1.6416241-3.66667-3.66667 1.6416241-3.66667 3.66667-3.66667zm0 2c-.9204764 0-1.66667.7461936-1.66667 1.66667s.7461936 1.66667 1.66667 1.66667 1.66667-.7461936 1.66667-1.66667-.7461936-1.66667-1.66667-1.66667zm.0001-7.33323c3.5168171 0 6.5625093 2.0171251 8.0432368 4.9575354l-1.5143264 1.5127043c-1.0142061-2.615688-3.5549814-4.4702397-6.5289104-4.4702397s-5.5147043 1.8545517-6.52891042 4.4702397l-1.51382132-1.5137072c1.48091492-2.939866 4.52631444-4.9565325 8.04273174-4.9565325zm.0001-5.3332c4.9804693 0 9.3676401 2.540213 11.9365919 6.3957185l-1.4470949 1.4473863c-2.1746764-3.5072732-6.0593053-5.8431048-10.489497-5.8431048s-8.31482064 2.3358316-10.48949703 5.8431048l-1.44709488-1.4473863c2.56895177-3.8555055 6.95612261-6.3957185 11.93659191-6.3957185zm-.0002-5.3336c6.4510616 0 12.1766693 3.10603731 15.7629187 7.9042075l-1.4304978 1.4309874c-3.2086497-4.44342277-8.4328305-7.3351949-14.3324209-7.3351949-5.8991465 0-11.12298511 2.89133703-14.33169668 7.334192l-1.43047422-1.4309849c3.58629751-4.79760153 9.31155768-7.9032071 15.7621709-7.9032071z' },
-    { name: 'heating', value: 'Máy làm nóng', img: 'M16 0a5 5 0 0 1 4.995 4.783L21 5l.001 12.756.26.217a7.984 7.984 0 0 1 2.717 5.43l.017.304L24 24a8 8 0 1 1-13.251-6.036l.25-.209L11 5A5 5 0 0 1 15.563.019l.22-.014zm0 2a3 3 0 0 0-2.995 2.824L13 5v13.777l-.428.298a6 6 0 1 0 7.062.15l-.205-.15-.428-.298L19 11h-4V9h4V7h-4V5h4a3 3 0 0 0-3-3zm1 11v7.126A4.002 4.002 0 0 1 16 28a4 4 0 0 1-1-7.874V13zm-1 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4z' },
-    { name: 'cableTV', value: 'Truyền hình cáp', img: 'M9 29v-2h2v-2H6a5 5 0 0 1-4.995-4.783L1 20V8a5 5 0 0 1 4.783-4.995L6 3h20a5 5 0 0 1 4.995 4.783L31 8v12a5 5 0 0 1-4.783 4.995L26 25h-5v2h2v2zm10-4h-6v2h6zm7-20H6a3 3 0 0 0-2.995 2.824L3 8v12a3 3 0 0 0 2.824 2.995L6 23h20a3 3 0 0 0 2.995-2.824L29 20V8a3 3 0 0 0-2.824-2.995z' }
-  ];
+export class RoomDetailComponent extends Destroyable implements OnInit {
+  argAmenity = amenities
 
   roomDetail: Room;
   roomId: string;
   arrReview: Review[];
 
   showMoreDescription: boolean = false;
-  searchInfo: any = {};
+  searchInfo: SearchInfo;
 
   items: MenuItem[];
   home: MenuItem;
 
-  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private reviewService: ReviewService, private router: Router, private location: Location) {
-    this.subParam = this.atvRoute.params.subscribe(params => {
+  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private reviewService: ReviewService, private router: Router, private location: Location, private transformService: TransformDataService) {
+    super()
+
+  }
+
+  ngOnInit(): void {
+    this.atvRoute.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.roomId = params['id'];
       console.log('roomId', this.roomId);
     })
 
-    this.subParam2 = this.atvRoute.queryParams.subscribe(params => {
-      console.log('query params', params)
-      this.searchInfo = params;
-      console.log('this.searchInfo', this.searchInfo)
-    })
-  }
-
-  ngOnInit(): void {
     // láy thong tin chi tiết phòng
-    this.roomService.layThongTinChiTietPhong(this.roomId).subscribe({
+    this.roomService.layThongTinChiTietPhong(this.roomId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('thong tin chi tiet phong', result);
         this.roomDetail = result;
@@ -68,7 +55,7 @@ export class RoomDetailComponent implements OnInit, OnDestroy {
     })
 
     //lấy danh sách đánh giá theo phòng
-    this.reviewService.layDanhSachDanhGiaTheoPhong(this.roomId).subscribe({
+    this.reviewService.layDanhSachDanhGiaTheoPhong(this.roomId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sách đánh giá', result);
         this.arrReview = result;
@@ -77,19 +64,23 @@ export class RoomDetailComponent implements OnInit, OnDestroy {
         console.log({ err });
       }
     })
+
+    //lấy kết quả tìm kiếm phòng
+    this.transformService.asData.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (result: SearchInfo) => {
+        console.log('ket qua tim phong', result);
+        if (null === result)
+          this.searchInfo = searchInfo;
+        else
+          this.searchInfo = result;
+      },
+      error: err => {
+        console.log({ err })
+      }
+    })
   }
 
   clickShowMore(): void {
     this.showMoreDescription = !this.showMoreDescription;
-  }
-
-  ngOnDestroy(): void {
-    if (this.subParam) {
-      this.subParam.unsubscribe();
-    }
-
-    if (this.subParam2) {
-      this.subParam2.unsubscribe();
-    }
   }
 }

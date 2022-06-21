@@ -1,19 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { Room } from 'src/app/_core/models/room';
-import { Ticket } from 'src/app/_core/models/ticket';
+import { SearchInfo, searchInfo } from 'src/app/_core/models/search-info';
 import { RoomService } from 'src/app/_core/services/room.service';
+import { TransformDataService } from 'src/app/_core/services/transform-data.service';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
   selector: 'app-room-list',
   templateUrl: './room-list.component.html',
   styleUrls: ['./room-list.component.scss']
 })
-export class RoomListComponent implements OnInit, OnDestroy {
-  subParam!: Subscription;
-  subParam2!: Subscription;
-
+export class RoomListComponent extends Destroyable implements OnInit {
   locationId: string = '';
 
   arrRoom: Room[];
@@ -28,37 +27,19 @@ export class RoomListComponent implements OnInit, OnDestroy {
   infantsNum!: number;
   petsNum!: number;
 
-  searchInfo: any = {};
+  searchInfo: SearchInfo;
 
-  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private router: Router) { }
-
+  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private router: Router, private transformService: TransformDataService) {
+    super()
+  }
 
   ngOnInit(): void {
-    this.subParam = this.atvRoute.params.subscribe(params => {
+    this.atvRoute.params.subscribe(params => {
       this.locationId = params['locationId'];
       console.log('location id', this.locationId);
     })
 
-    this.subParam2 = this.atvRoute.queryParams.subscribe((params) => {
-      console.log('query params', params)
-
-      if (Object.keys(params).length != 0) {
-        this.searchInfo = params;
-      } else {
-        this.searchInfo = {
-          checkIn: new Date(),
-          checkOut: new Date(),
-          adultsNum: 0,
-          childrenNum: 0,
-          infantsNum: 0,
-          petsNum: 0
-        }
-      }
-      this.checkIn = this.searchInfo.checkIn;
-      this.checkOut = this.searchInfo.checkOut;
-    })
-
-    this.roomService.layDanhSachPhongTheoViTri(this.locationId).subscribe({
+    this.roomService.layDanhSachPhongTheoViTri(this.locationId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach phong theo vi tri', result);
         this.arrRoom = result;
@@ -67,22 +48,22 @@ export class RoomListComponent implements OnInit, OnDestroy {
         console.log({ err })
       }
     })
-  }
 
-  goRoomDetail(roomDetail: Room): void {
-    this.router.navigate([`roomdetail/${roomDetail._id}`], {
-      queryParams: this.searchInfo, queryParamsHandling: 'merge'
+    this.transformService.asData.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (result: SearchInfo) => {
+        console.log('transform data', result);
+        if (null === result)
+          this.searchInfo = searchInfo;
+        else
+          this.searchInfo = result;
+      },
+      error: err => {
+        console.log({ err });
+      }
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.subParam) {
-      this.subParam.unsubscribe();
-    }
-
-    if (this.subParam2) {
-      this.subParam2.unsubscribe();
-    }
+  goRoomDetail(roomDetail: Room): void {
+    this.router.navigate([`roomdetail/${roomDetail._id}`]);
   }
-
 }

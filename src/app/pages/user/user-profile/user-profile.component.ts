@@ -1,20 +1,18 @@
-import { AfterViewInit, Component, DoCheck, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { User } from 'src/app/_core/models/user';
 import { UserService } from 'src/app/_core/services/user.service';
 import { NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss']
 })
-export class UserProfileComponent implements OnInit, OnDestroy {
-  subParam!: Subscription;
-  subService!: Subscription;
-
+export class UserProfileComponent extends Destroyable implements OnInit {
   userId: string = '';
   userDetails!: User;
 
@@ -26,15 +24,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   @ViewChild('editForm') editForm!: NgForm;
 
-  constructor(private atvRoute: ActivatedRoute, private messageService: MessageService, private userService: UserService) { }
+  constructor(private atvRoute: ActivatedRoute, private messageService: MessageService, private userService: UserService) {
+    super()
+  }
 
   ngOnInit(): void {
-    this.subParam = this.atvRoute.params.subscribe(params => {
+    this.atvRoute.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.userId = params['id'];
       // console.log(this.userId)
     })
 
-    this.subService = this.userService.layThongtinNguoiDung(this.userId).subscribe({
+    this.userService.layThongtinNguoiDung(this.userId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         // console.log('user detail', result);
         this.userDetails = result;
@@ -49,7 +49,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.files = (event.target as HTMLInputElement).files;
     this.fileToUpload = this.files.item(0);
 
-    this.userService.capNhatAnhNguoiDung(this.fileToUpload).subscribe({
+    this.userService.capNhatAnhNguoiDung(this.fileToUpload).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         this.userDetails = result;
 
@@ -72,9 +72,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   clickEditUser() {
     // console.log('edit form', this.userDetails);
-    this.userService.capNhatNguoiDung(this.userDetails._id, this.userDetails).subscribe({
-      next: resutl => {
-        // console.log('cap nhat nguoi dung', resutl);
+    this.userService.capNhatNguoiDung(this.userDetails._id, this.userDetails).pipe(takeUntil(this.destroy$)).subscribe({
+      next: result => {
+        // console.log('cap nhat nguoi dung', result);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công!', life: 3000 })
       },
       error: err => {
@@ -82,15 +82,5 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 })
       }
     })
-  }
-
-  ngOnDestroy(): void {
-    if (this.subParam) {
-      this.subParam.unsubscribe();
-    }
-
-    if (this.subService) {
-      this.subService.unsubscribe();
-    }
   }
 }

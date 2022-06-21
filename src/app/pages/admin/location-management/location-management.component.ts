@@ -1,15 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { takeUntil } from 'rxjs';
 import { Location } from 'src/app/_core/models/location';
 import { LocationService } from 'src/app/_core/services/location.service';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
   selector: 'app-location-management',
   templateUrl: './location-management.component.html',
   styleUrls: ['./location-management.component.scss']
 })
-export class LocationManagementComponent implements OnInit {
+export class LocationManagementComponent extends Destroyable implements OnInit {
   imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   actionBtnDialog!: string;
   headerDialog!: string;
@@ -25,10 +27,12 @@ export class LocationManagementComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | undefined;
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private locationService: LocationService) { }
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private locationService: LocationService) {
+    super()
+  }
 
   ngOnInit(): void {
-    this.locationService.layDanhSachViTri().subscribe({
+    this.locationService.layDanhSachViTri().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach vi tri', result);
         this.arrLocation = result;
@@ -52,7 +56,7 @@ export class LocationManagementComponent implements OnInit {
   viewDetailLocation(locationId: string): void {
     this.viewDetailDialog = true;
 
-    this.locationService.layThongTinChiTietViTri(locationId).subscribe({
+    this.locationService.layThongTinChiTietViTri(locationId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('thong tin chi tiet vi tri', result);
         this.location = result;
@@ -80,7 +84,7 @@ export class LocationManagementComponent implements OnInit {
       acceptLabel: 'Có',
       rejectLabel: 'Không',
       accept: () => {
-        this.locationService.xoaViTri(location._id).subscribe({
+        this.locationService.xoaViTri(location._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('xoa vi tri', result);
             this.arrLocation = this.arrLocation.filter(val => val._id !== location._id);
@@ -102,7 +106,7 @@ export class LocationManagementComponent implements OnInit {
     if (this.location._id) {
       let locationIndex = this.arrLocation.findIndex(loc => loc._id === this.location._id);
       if (locationIndex !== -1) {
-        this.locationService.capNhatThongTinViTri(this.location._id, this.location).subscribe({
+        this.locationService.capNhatThongTinViTri(this.location._id, this.location).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('cap nhat vi tri', result);
             this.arrLocation[locationIndex] = result;
@@ -118,7 +122,7 @@ export class LocationManagementComponent implements OnInit {
       }
     }
     else {
-      this.locationService.taoViTri(this.location).subscribe({
+      this.locationService.taoViTri(this.location).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
           console.log('tao vi tri', result);
           this.arrLocation.push(result);
@@ -149,7 +153,7 @@ export class LocationManagementComponent implements OnInit {
 
     let locationIndex = this.arrLocation.findIndex(loc => loc._id === locId);
     if (locationIndex !== -1) {
-      this.locationService.capNhatAnhViTri(this.fileToUpload, locId).subscribe({
+      this.locationService.capNhatAnhViTri(this.fileToUpload, locId).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
           console.log('cap nhat anh vi tri', result);
 

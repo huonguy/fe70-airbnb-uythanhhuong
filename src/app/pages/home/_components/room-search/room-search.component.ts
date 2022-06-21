@@ -1,15 +1,19 @@
-import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { takeUntil } from 'rxjs';
+import { Destroyable } from 'src/app/pages/_directives/Destroyable.directive';
 import { Location } from 'src/app/_core/models/location';
+import { SearchInfo } from 'src/app/_core/models/search-info';
 import { LocationService } from 'src/app/_core/services/location.service';
+import { TransformDataService } from 'src/app/_core/services/transform-data.service';
 
 @Component({
   selector: 'app-room-search',
   templateUrl: './room-search.component.html',
   styleUrls: ['./room-search.component.scss']
 })
-export class RoomSearchComponent implements OnInit, OnDestroy {
+export class RoomSearchComponent extends Destroyable implements OnInit {
   getScreenWidth: any;
   getScreenHeight: any;
 
@@ -26,7 +30,8 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   arrLocationFilter: Location[];
   locationName!: string;
 
-  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService) {
+  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService, private transformService: TransformDataService) {
+    super();
     this.checkOut.setDate(this.checkIn.getDate() + 1)
   }
 
@@ -34,7 +39,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
 
-    this.locationService.layDanhSachViTri().subscribe({
+    this.locationService.layDanhSachViTri().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach vi tri', result)
         this.arrLocationFilter = this.arrLocation = result;
@@ -73,7 +78,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let searchParam = {
+    let searchInfo: SearchInfo = {
       checkIn: this.checkIn,
       checkOut: this.checkOut,
       adultsNum: this.adultsNum,
@@ -82,10 +87,11 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
       petsNum: this.petsNum
     };
 
+    //dispatch search info to Behavior
+    this.transformService.transformData(searchInfo);
+
     if (this.selectedLocation) {
-      this.router.navigate([`roomlist/${this.selectedLocation._id}`], {
-        queryParams: searchParam, queryParamsHandling: 'merge'
-      });
+      this.router.navigate([`roomlist/${this.selectedLocation._id}`]);
     }
     else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Bạn chưa chọn địa điểm đi.', life: 3000 });
@@ -111,8 +117,5 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     else {
       this.arrLocationFilter = this.arrLocation.filter(loc => loc.name?.toLowerCase().includes(value.toLowerCase()));
     }
-  }
-
-  ngOnDestroy(): void {
   }
 }

@@ -11,13 +11,14 @@ import { RoomDetailComponent } from './room-detail/room-detail.component';
 import { HomeComponent } from './home/home.component';
 import { CarouselComponent } from './_components/carousel/carousel.component';
 import { RoomSearchComponent } from './_components/room-search/room-search.component';
+import { ReservePanelComponent } from './room-detail/reserve-panel/reserve-panel.component';
 
 import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 //cấu hình route cho /home
 import { RouterModule, Routes } from '@angular/router';
-import { ReservePanelComponent } from './room-detail/reserve-panel/reserve-panel.component';
+
 
 const homeRoutes: Routes = [
   {

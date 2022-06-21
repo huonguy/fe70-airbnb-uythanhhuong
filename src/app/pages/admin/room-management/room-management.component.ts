@@ -1,17 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { takeUntil } from 'rxjs';
 import { Location } from 'src/app/_core/models/location';
 import { Room } from 'src/app/_core/models/room';
 import { LocationService } from 'src/app/_core/services/location.service';
 import { RoomService } from 'src/app/_core/services/room.service';
+import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
   selector: 'app-room-management',
   templateUrl: './room-management.component.html',
   styleUrls: ['./room-management.component.scss']
 })
-export class RoomManagementComponent implements OnInit {
+export class RoomManagementComponent extends Destroyable implements OnInit {
   imageDefault: string = "../../../../assets/images/no-image-ico.jpg"
   actionBtnDialog!: string;
   headerDialog!: string;
@@ -28,10 +30,12 @@ export class RoomManagementComponent implements OnInit {
 
   @ViewChild('dt') dt: Table | undefined;
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private roomService: RoomService, private locationService: LocationService) { }
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private roomService: RoomService, private locationService: LocationService) {
+    super()
+  }
 
   ngOnInit(): void {
-    this.roomService.layDanhSachPhong().subscribe({
+    this.roomService.layDanhSachPhong().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach phong', result);
         this.arrRoom = result;
@@ -42,7 +46,7 @@ export class RoomManagementComponent implements OnInit {
       }
     })
 
-    this.locationService.layDanhSachViTri().subscribe({
+    this.locationService.layDanhSachViTri().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         this.arrLocation = result;
       },
@@ -65,7 +69,7 @@ export class RoomManagementComponent implements OnInit {
   viewDetailRoom(roomId: string): void {
     this.viewDetailDialog = true;
 
-    this.roomService.layThongTinChiTietPhong(roomId).subscribe({
+    this.roomService.layThongTinChiTietPhong(roomId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('thong tin chi tiet phong', result);
         this.room = result;
@@ -93,7 +97,7 @@ export class RoomManagementComponent implements OnInit {
       acceptLabel: 'Có',
       rejectLabel: 'Không',
       accept: () => {
-        this.roomService.xoaPhong(room._id).subscribe({
+        this.roomService.xoaPhong(room._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('xoa phong', result);
             this.arrRoom = this.arrRoom.filter(val => val._id !== room._id);
@@ -116,7 +120,7 @@ export class RoomManagementComponent implements OnInit {
       console.log('thong tin thay doi', this.room);
       let roomIndex = this.arrRoom.findIndex(r => r._id === this.room._id);
       if (roomIndex !== -1) {
-        this.roomService.capNhatThongTinPhong(this.room._id, this.room).subscribe({
+        this.roomService.capNhatThongTinPhong(this.room._id, this.room).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
             console.log('cap nhat phong', result);
 
@@ -134,7 +138,7 @@ export class RoomManagementComponent implements OnInit {
       }
     }
     else {
-      this.roomService.taoPhong(this.room).subscribe({
+      this.roomService.taoPhong(this.room).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
           console.log('tạo phòng', result);
 
@@ -167,7 +171,7 @@ export class RoomManagementComponent implements OnInit {
 
     let roomIndex = this.arrRoom.findIndex(ro => ro._id === roId);
     if (roomIndex !== -1) {
-      this.roomService.capNhatAnhPhong(this.fileToUpload, roId).subscribe({
+      this.roomService.capNhatAnhPhong(this.fileToUpload, roId).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
           console.log('cap nhat anh phong', result);
 
