@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Loader } from '@googlemaps/js-api-loader';
 import { takeUntil } from 'rxjs';
 import { Room } from 'src/app/_core/models/room';
 import { SearchInfo, searchInfo } from 'src/app/_core/models/search-info';
+import { GoogleMapService } from 'src/app/_core/services/google-map.service';
 import { RoomService } from 'src/app/_core/services/room.service';
 import { TransformDataService } from 'src/app/_core/services/transform-data.service';
+import { GOOGLE_MAPS_KEY } from 'src/app/_core/util/config';
 import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
@@ -14,6 +17,7 @@ import { Destroyable } from '../../_directives/Destroyable.directive';
 })
 export class RoomListComponent extends Destroyable implements OnInit {
   locationId: string = '';
+  locationName: string = '';
 
   arrRoom: Room[];
 
@@ -28,20 +32,54 @@ export class RoomListComponent extends Destroyable implements OnInit {
   petsNum!: number;
 
   searchInfo: SearchInfo;
+  location = {
+    lat: 0,
+    lng: 0
+  };
 
-  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private router: Router, private transformService: TransformDataService) {
+  @ViewChild('map') mapEle: any;
+  map: google.maps.Map;
+
+  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private router: Router, private transformService: TransformDataService, private googleMapService: GoogleMapService) {
     super()
   }
 
   ngOnInit(): void {
-    this.atvRoute.params.subscribe(params => {
+    this.atvRoute.queryParams.subscribe((params) => {
       this.locationId = params['locationId'];
-      console.log('location id', this.locationId);
+      this.locationName = params['locationName'];
+
+      this.googleMapService.getGeoCode(this.locationName).then((res: any) => {
+        // console.log('getGeoCode', res);
+        this.location = res;
+
+        // load the google map on the browser
+        let loader = new Loader({
+          apiKey: GOOGLE_MAPS_KEY
+        })
+
+        return loader.load();
+      })
+        .then(() => {
+          this.map = new google.maps.Map(this.mapEle.nativeElement, {
+            center: this.location,
+            zoom: 12
+          });
+
+          //marker
+          const marker = new google.maps.Marker({
+            position: this.location,
+            map: this.map
+          })
+        })
+        .catch((err) => {
+          console.log({ err })
+        })
     })
 
     this.roomService.layDanhSachPhongTheoViTri(this.locationId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('danh sach phong theo vi tri', result);
+        // console.log('danh sach phong theo vi tri', result);
         this.arrRoom = result;
       },
       error: err => {
@@ -51,7 +89,7 @@ export class RoomListComponent extends Destroyable implements OnInit {
 
     this.transformService.asData.pipe(takeUntil(this.destroy$)).subscribe({
       next: (result: SearchInfo) => {
-        console.log('transform data', result);
+        // console.log('transform data', result);
         if (null === result)
           this.searchInfo = searchInfo;
         else

@@ -51,5 +51,4 @@ export class RoomService {
     let ob = this.httpClient.post(`${DOMAIN}/api/rooms/booking`, bookingInfo);
     return ob;
   }
-
 }

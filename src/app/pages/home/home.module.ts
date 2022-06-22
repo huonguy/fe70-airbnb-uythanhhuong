@@ -24,7 +24,7 @@ const homeRoutes: Routes = [
   {
     path: '', component: HomeLayoutComponent, children: [
       { path: '', component: HomeComponent },
-      { path: 'roomlist/:locationId', component: RoomListComponent },
+      { path: 'roomlist', component: RoomListComponent },
       { path: 'roomdetail/:id', component: RoomDetailComponent }
     ]
   }

@@ -73,6 +73,7 @@ export class RoomSearchComponent extends Destroyable implements OnInit {
   }
 
   searchRoom(): void {
+
     if (this.calculateDiff(this.checkIn, this.checkOut) <= 0) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ngày nhận phòng và trả phòng không hợp lệ.', life: 3000 })
       return;
@@ -91,7 +92,7 @@ export class RoomSearchComponent extends Destroyable implements OnInit {
     this.transformService.transformData(searchInfo);
 
     if (this.selectedLocation) {
-      this.router.navigate([`roomlist/${this.selectedLocation._id}`]);
+      this.router.navigate(['roomlist'], { queryParams: { locationId: this.selectedLocation._id, locationName: this.selectedLocation.name + ', ' + this.selectedLocation.province } });
     }
     else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Bạn chưa chọn địa điểm đi.', life: 3000 });

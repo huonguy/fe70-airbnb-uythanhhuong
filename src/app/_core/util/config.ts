@@ -5,3 +5,7 @@ export const USER_LOGIN: string = 'userLogin';
 //domain backend
 export const DOMAIN = "https://airbnb.cybersoft.edu.vn";
 //tslint
+
+
+export const GOOGLE_MAPS_KEY = "AIzaSyCwPPdSSe3aduv7vLFk_q4i8EtTz_dbJfc";
+
