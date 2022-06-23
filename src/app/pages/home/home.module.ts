@@ -19,12 +19,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
 //cấu hình route cho /home
 import { RouterModule, Routes } from '@angular/router';
 
+import { CookieService } from 'ngx-cookie-service';
 
 const homeRoutes: Routes = [
   {
     path: '', component: HomeLayoutComponent, children: [
       { path: '', component: HomeComponent },
-      { path: 'roomlist', component: RoomListComponent },
+      { path: 'roomlist/:locId', component: RoomListComponent },
       { path: 'roomdetail/:id', component: RoomDetailComponent }
     ]
   }
@@ -53,6 +54,9 @@ const homeRoutes: Routes = [
   exports: [
     HomeLayoutComponent,
     HeaderComponent
+  ],
+  providers: [
+    CookieService
   ]
 })
 export class HomeModule { }

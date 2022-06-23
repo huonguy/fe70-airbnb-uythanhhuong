@@ -8,6 +8,7 @@ export class GoogleMapService {
   map: google.maps.Map;
 
   getGeoCode(address) {
+    console.log('address', address)
     return new Promise((resolve: any, reject: any) => {
       superagent
         .get(
@@ -17,6 +18,7 @@ export class GoogleMapService {
 
           if (err) {
             reject(err);
+            return;
           }
 
           const { lat, lng } = res.body.results[0].geometry.location

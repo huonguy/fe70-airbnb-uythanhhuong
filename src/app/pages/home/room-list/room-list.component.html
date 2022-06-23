@@ -1,22 +1,26 @@
 <div class="container">
   <div class="d-flex">
     <div class="mt-4">
-      <p>{{arrRoom?.length}} chỗ ở {{searchInfo?.checkIn | date: 'dd/MM'}} - {{searchInfo?.checkOut | date: 'dd/MM'}}
+      <p>{{updatedArrRoom?.length}} chỗ ở {{searchInfo?.checkIn | date: 'dd/MM'}} - {{searchInfo?.checkOut | date:
+        'dd/MM'}}
       </p>
       <h2>Chỗ ở tại khu vực bản đồ đã chọn</h2>
       <div class="py-4">
-        <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Loại nơi
+        <button disabled type="button" class="btn btn-outline-secondary rounded-pill me-1">Loại nơi
           ở</button>
-        <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Giá</button>
-        <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Đặt
+        <button type="button" class="btn btn-outline-secondary rounded-pill me-1" data-bs-toggle="modal"
+          data-bs-target="#priceFilterId">Giá</button>
+        <button disabled type="button" class="btn btn-outline-secondary rounded-pill me-1">Đặt
           ngay</button>
-        <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Phòng và
+        <button type="button" class="btn btn-outline-secondary rounded-pill me-1" data-bs-toggle="modal"
+          data-bs-target="#roomFilterId">Phòng và
           phòng
           ngủ</button>
-        <button type="button" class="btn btn-outline-secondary rounded-pill me-1">Bộ lọc
+        <button disabled type="button" class="btn btn-outline-secondary rounded-pill me-1">Bộ lọc
           khác</button>
       </div>
-      <div *ngFor="let room of arrRoom | paginate: { itemsPerPage: 3, currentPage: cp}" class="card mb-3 border-0">
+      <div *ngFor="let room of updatedArrRoom | paginate: { itemsPerPage: 3, currentPage: cp}"
+        class="card mb-3 border-0">
         <div class="d-flex flex-wrap" style="border-bottom: 1px solid rgba(0,0,0,.1);">
           <img [src]="room.image || imageDefault" class="rounded-start img-fluid" alt="...">
           <div class="card-body w-50">
@@ -25,7 +29,7 @@
                   {{room.locationId.name}},{{room.locationId.province}}</small></p>
               <h5 class="card-title">{{room.name}}</h5>
               <hr style="width: 2rem; opacity: .2" />
-              <p class="card-text">{{room.guests}} khách. {{room.bedRoom}} giường. {{room.bath}} phòng tắm
+              <p class="card-text">{{room.guests}} khách. {{room.bedRoom}} phòng ngủ. {{room.bath}} phòng tắm
                 <br />{{room.wifi ? 'Wifi. ':''}}{{room.kitchen ? 'Bếp. ':''}}{{room.hotTub ? 'Bồn nước nóng.
                 ':''}}{{room.heating ? 'Lò sưởi. ': ''}}
               </p>
@@ -40,6 +44,94 @@
       </pagination-controls>
     </div>
     <div #map class="d-none d-lg-flex w-50">
+    </div>
+  </div>
+</div>
+
+<!-- Modal for price filtering -->
+<div class="modal fade" id="priceFilterId" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Lọc theo giá</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex">
+          <div>
+            <span>Giá tối thiểu</span>
+            <p-inputNumber [(ngModel)]="filteredByMinPrice" [showButtons]="true" mode="currency" currency="VND">
+            </p-inputNumber>
+          </div>
+          <div>
+            <span>Giá tối đa</span>
+            <p-inputNumber [(ngModel)]="filteredByMaxPrice" [showButtons]="true" mode="currency" currency="VND">
+            </p-inputNumber>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="removePriceFilter()">Xóa</button>
+        <button type="button" class="btn btn-primary" (click)="clickFilterPrice()">Hiển thị</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for room filtering -->
+<div class="modal fade" id="roomFilterId" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Lọc theo phòng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-column">
+          <div class="d-flex justify-content-around">
+            <span>Phòng ngủ</span>
+            <div class="field-radiobutton">
+              <p-radioButton name="zero" value="0" [(ngModel)]="filteredByBedroom" inputId="zero"></p-radioButton>
+              <label class="text-muted" for="zero">Bất kỳ</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="one" value="1" [(ngModel)]="filteredByBedroom" inputId="one"></p-radioButton>
+              <label class="text-muted" for="one">1</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="two" value="2" [(ngModel)]="filteredByBedroom" inputId="two"></p-radioButton>
+              <label class="text-muted" for="one">2</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="three" value="3" [(ngModel)]="filteredByBedroom" inputId="three"></p-radioButton>
+              <label class="text-muted" for="one">3+</label>
+            </div>
+          </div>
+          <div class="d-flex justify-content-around">
+            <span>Phòng tắm</span>
+            <div class="field-radiobutton">
+              <p-radioButton name="zero" value="0" [(ngModel)]="filteredByBath" inputId="zero"></p-radioButton>
+              <label class="text-muted" for="zero">Bất kỳ</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="one" value="1" [(ngModel)]="filteredByBath" inputId="one"></p-radioButton>
+              <label class="text-muted" for="one">1</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="two" value="2" [(ngModel)]="filteredByBath" inputId="two"></p-radioButton>
+              <label class="text-muted" for="one">2</label>
+            </div>
+            <div class="field-radiobutton">
+              <p-radioButton name="three" value="3" [(ngModel)]="filteredByBath" inputId="three"></p-radioButton>
+              <label class="text-muted" for="one">3+</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="removeRoomFilter()">Xóa</button>
+        <button type="button" class="btn btn-primary" (click)="clickFilterRoom()">Hiển thị</button>
+      </div>
     </div>
   </div>
 </div>

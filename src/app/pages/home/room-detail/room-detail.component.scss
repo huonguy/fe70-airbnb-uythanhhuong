@@ -105,3 +105,11 @@ cdk-virtual-scroll-viewport {
   border: 0;
 }
 
+.social-share-btn {
+  border-radius: 10px;
+  border: 1px solid rgb(221, 221, 221);
+
+  &:hover {
+    background: rgb(247, 247, 247) !important;
+  }
+}

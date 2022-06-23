@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
 import { takeUntil } from 'rxjs';
 import { Destroyable } from 'src/app/pages/_directives/Destroyable.directive';
@@ -30,7 +31,7 @@ export class RoomSearchComponent extends Destroyable implements OnInit {
   arrLocationFilter: Location[];
   locationName!: string;
 
-  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService, private transformService: TransformDataService) {
+  constructor(private locationService: LocationService, private router: Router, private messageService: MessageService, private transformService: TransformDataService, private cookie: CookieService) {
     super();
     this.checkOut.setDate(this.checkIn.getDate() + 1)
   }
@@ -88,11 +89,11 @@ export class RoomSearchComponent extends Destroyable implements OnInit {
       petsNum: this.petsNum
     };
 
-    //dispatch search info to Behavior
-    this.transformService.transformData(searchInfo);
+    //store search info in cookie
+    this.cookie.set('search_info', JSON.stringify(searchInfo));
 
     if (this.selectedLocation) {
-      this.router.navigate(['roomlist'], { queryParams: { locationId: this.selectedLocation._id, locationName: this.selectedLocation.name + ', ' + this.selectedLocation.province } });
+      this.router.navigate([`roomlist/${this.selectedLocation._id}`]);
     }
     else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Bạn chưa chọn địa điểm đi.', life: 3000 });
