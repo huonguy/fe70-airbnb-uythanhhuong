@@ -20,9 +20,9 @@
         <th pSortableColumn="name">Tên địa điểm <p-sortIcon field="name"></p-sortIcon>
         </th>
         <th>Hình ảnh</th>
-        <th pSortableColumn="province">Tỉnh <p-sortIcon field="province"></p-sortIcon>
+        <th pSortableColumn="provinceId">Tỉnh <p-sortIcon field="provinceId"></p-sortIcon>
         </th>
-        <th pSortableColumn="country">Quốc gia <p-sortIcon field="country"></p-sortIcon>
+        <th pSortableColumn="countryId">Quốc gia <p-sortIcon field="countryId"></p-sortIcon>
         </th>
         <th></th>
       </tr>
@@ -30,19 +30,30 @@
     <ng-template pTemplate="body" let-loc>
       <tr>
         <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="">
-          {{loc._id}}
+          {{loc?._id}}
         </td>
-        <td>{{loc.name}}</td>
+        <td>{{loc?.name}}</td>
         <td class="text-center">
-          <img [src]="loc.image || imageDefault" [alt]="" width="100" class="shadow-4 mb-1" />
+          <img [src]="loc?.image || imageDefault" [alt]="" width="100" class="shadow-4 mb-1" />
           <br />
           <label class="editPic-label" role="button">
             Chỉnh sửa
             <input class="hidden" type="file" id="newPhoto" accept="image/*" (change)="updateImage($event, loc._id)" />
           </label>
         </td>
-        <td>{{loc.province}}</td>
-        <td>{{loc.country}}</td>
+
+        <ng-container *ngFor="let province of provinces">
+          <td *ngIf="loc?.provinceId === province.value">
+            {{province.label}}
+          </td>
+        </ng-container>
+
+        <ng-container *ngFor="let country of countries">
+          <td *ngIf="loc?.countryId === country.value">
+            {{country.label}}
+          </td>
+        </ng-container>
+
         <td>
           <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
             class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailLocation(loc._id)"></button>
@@ -76,8 +87,12 @@
       </div>
       <div class="field">
         <label for="province">Tỉnh</label>
-        <input type="text" pInputText id="province" [(ngModel)]="location.province" required #locationProvince="ngModel"
-          name="province" />
+        <p-dropdown [(ngModel)]="location.provinceId" inputId="province" [options]="provinces" placeholder="Chọn tỉnh"
+          name="province" [required]="true" #locationProvince="ngModel">
+          <ng-template let-option pTemplate="item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+          </ng-template>
+        </p-dropdown>
         <ng-container *ngIf="locationProvince.invalid && (locationProvince.dirty || locationProvince.touched)">
           <small class="p-error" *ngIf="locationProvince.errors?.['required']">
             Tỉnh không được bỏ trống.
@@ -86,8 +101,12 @@
       </div>
       <div class="field">
         <label for="country">Quốc gia</label>
-        <input type="text" pInputText id="country" [(ngModel)]="location.country" required #locationCountry="ngModel"
-          name="country" />
+        <p-dropdown [(ngModel)]="location.countryId" inputId="country" [options]="countries" placeholder="Chọn quốc gia"
+          name="country" [required]="true" #locationCountry="ngModel">
+          <ng-template let-option pTemplate=" item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+          </ng-template>
+        </p-dropdown>
         <ng-container *ngIf="locationCountry.invalid && (locationCountry.dirty || locationCountry.touched)">
           <small class="p-error" *ngIf="locationCountry.errors?.['required']">
             Quốc gia không được bỏ trống.
@@ -115,8 +134,20 @@
       <img [src]="location?.image || imageDefault" class="card-img-top" alt="room.image">
       <div class="card-body">
         <p clas="card-text">Mã địa điểm : <span class="text-muted">{{location?._id}}</span></p>
-        <p clas="card-text">Tỉnh : <span class="text-muted">{{location?.province}}</span></p>
-        <p clas="card-text">Quốc gia : <span class="text-muted">{{location?.country}}</span></p>
+        <p clas="card-text">Tỉnh :
+          <ng-container *ngFor="let province of provinces">
+            <span class="text-muted" *ngIf="location?.provinceId === province.value">
+              {{province.label}}
+            </span>
+          </ng-container>
+        </p>
+        <p clas="card-text">Quốc gia :
+          <ng-container *ngFor="let country of countries">
+            <span class="text-muted" *ngIf="location?.countryId === country.value">
+              {{country.label}}
+            </span>
+          </ng-container>
+        </p>
         <p clas="card-text">Đánh giá : <span class="text-muted">{{location?.valueate}}</span></p>
 
       </div>

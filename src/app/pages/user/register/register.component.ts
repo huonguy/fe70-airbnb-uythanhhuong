@@ -23,11 +23,10 @@ export class RegisterComponent extends Destroyable implements OnInit {
   dangKy(registerForm: NgForm): void {
     this.userService.dangKy(registerForm.value).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        // console.log(result);
         registerForm.reset();
         this.router.navigate(['/user/login']);
 
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Đăng ký thành công!', life: 3000 })
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 })
       },
       error: err => {
         console.log({ err });

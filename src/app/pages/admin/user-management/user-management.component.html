@@ -20,9 +20,9 @@
         <th pSortableColumn="name">Họ tên <p-sortIcon field="name"></p-sortIcon>
         </th>
         <th>Hình ảnh</th>
-        <th pSortableColumn="type">Vai trò <p-sortIcon field="type"></p-sortIcon>
+        <th pSortableColumn="roleId">Vai trò <p-sortIcon field="roleId"></p-sortIcon>
         </th>
-        <th pSortableColumn="Email">Email <p-sortIcon field="Email"></p-sortIcon>
+        <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon>
         </th>
         <th></th>
       </tr>
@@ -34,7 +34,11 @@
         <td>
           <img [src]="us.avatar || imageDefault" [alt]="us.name" width="100" class="shadow-4 mb-1" />
         </td>
-        <td>{{us.type}}</td>
+        <ng-container *ngFor="let role of roleList">
+          <td *ngIf="role.value === us.roleId">
+            {{role.label}}
+          </td>
+        </ng-container>
         <td>{{us.email}}</td>
         <td>
           <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
@@ -79,7 +83,7 @@
       <div class="field">
         <label for="email">Email</label>
         <input type="email" pInputText id="email" [(ngModel)]="user.email" required
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" name="email" />
+          pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" name="email" />
         <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
           <small class="p-error" *ngIf="email.errors?.['required']">
             Email không được bỏ trống.
@@ -101,17 +105,18 @@
       </div>
       <div class="field">
         <label for="birthday">Ngày sinh</label>
-        <p-calendar inputId="birthday" [ngModel]="user.birthday | date : 'MM/dd/yyyy'"
-          (ngModelChange)="user.birthday=$event" name="birthday">
-        </p-calendar>
+        <p-inputMask mask="9999-99-99" [ngModel]="user.birthday" (ngModelChange)="user.birthday=$event"
+          placeholder="yyyy-mm-dd" slotChar="yyyy-mm-dd" name="birthday">
+        </p-inputMask>
       </div>
       <div class="field">
         <label for="address">Địa chỉ</label>
         <textarea id="address" pInputTextarea [(ngModel)]="user.address" rows="3" cols="50" name="address"></textarea>
       </div>
       <div class="field">
-        <label for="type">Vai trò</label>
-        <p-dropdown [(ngModel)]="user.type" inputId="type" [options]="roleList" placeholder="Chọn vai trò" name="type">
+        <label for="role">Vai trò</label>
+        <p-dropdown [(ngModel)]="user.roleId" inputId="role" [options]="roleList" placeholder="Chọn vai trò"
+          name="role">
           <ng-template let-option pTemplate="item">
             <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
           </ng-template>
@@ -150,7 +155,13 @@
         <p class="card-text">Ngày sinh : <span class="text-muted">{{user?.birthday | date: 'MM/dd/yyyy'}}</span> </p>
         <p class="card-text">Giới tính : <span class="text-muted">{{user?.gender?'Nam':'Nữ'}}</span> </p>
         <p class="card-text">Điện thoại : <span class="text-muted">{{user?.phone}}</span> </p>
-        <p class="card-text">Vai trò : <span class="text-muted">{{user?.type}}</span> </p>
+        <p class="card-text">Vai trò :
+          <ng-container *ngFor="let role of roleList">
+            <span class="text-muted" *ngIf="role.value === user?.roleId">
+              {{role.label}}
+            </span>
+          </ng-container>
+        </p>
       </div>
     </div>
     <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>

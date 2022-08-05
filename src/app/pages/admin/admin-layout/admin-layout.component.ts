@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { filter, takeUntil } from 'rxjs';
 import { User } from 'src/app/_core/models/user';
+import { UserService } from 'src/app/_core/services/user.service';
 import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
 import { Destroyable } from '../../_directives/Destroyable.directive';
 
@@ -14,7 +15,7 @@ declare var $: any;
   styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent extends Destroyable implements OnInit, AfterViewInit {
-  constructor(private router: Router, private confirmationService: ConfirmationService) {
+  constructor(private router: Router, private confirmationService: ConfirmationService, private userService: UserService) {
     super()
   }
   user!: User;
@@ -23,7 +24,15 @@ export class AdminLayoutComponent extends Destroyable implements OnInit, AfterVi
 
   ngOnInit(): void {
     if (localStorage.getItem(USER_LOGIN)) {
-      this.user = JSON.parse(localStorage.getItem(USER_LOGIN));
+      const userId = JSON.parse(localStorage.getItem(USER_LOGIN))._id;
+      this.userService.layThongtinNguoiDung(userId).pipe(takeUntil(this.destroy$)).subscribe({
+        next: result => {
+          this.user = result;
+        },
+        error: err => {
+          console.log({ err });
+        }
+      })
     }
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).pipe(takeUntil(this.destroy$)).subscribe((pageSection) => {

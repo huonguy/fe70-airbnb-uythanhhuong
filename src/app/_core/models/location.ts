@@ -4,5 +4,9 @@ export interface Location {
   province?: string,
   country?: string,
   image?: string,
-  valueate?: number
+  valueate?: number,
+  countryId?: string,
+  provinceId?: string,
+  label?: string,
+  value?: string
 }

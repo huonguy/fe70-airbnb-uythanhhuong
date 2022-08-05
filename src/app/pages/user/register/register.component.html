@@ -25,7 +25,7 @@
 
   <div class="form-group">
     <input class="form-control inputStyle" #email="ngModel" type="email" placeholder="Email" name="email" ngModel
-      required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" />
+      required pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" />
     <ng-container *ngIf="(email.touched || email.dirty) && email.errors">
       <p *ngIf="email.errors['pattern']" class="text text-danger d-inline">
         Email không đúng định dạng!

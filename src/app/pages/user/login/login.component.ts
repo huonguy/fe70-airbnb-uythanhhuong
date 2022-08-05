@@ -7,6 +7,8 @@ import { User } from 'src/app/_core/models/user';
 import { UserService } from 'src/app/_core/services/user.service';
 import { ACCESS_TOKEN, USER_LOGIN } from 'src/app/_core/util/config';
 import { Destroyable } from '../../_directives/Destroyable.directive';
+import jwt_decode, { JwtDecodeOptions, JwtPayload } from "jwt-decode";
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-login',
@@ -23,17 +25,19 @@ export class LoginComponent extends Destroyable implements OnInit {
   }
 
   dangNhap(user: User): void {
-    console.log(user);
     this.userService.dangNhap(user).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        // console.log(result)
-        this.router.navigate([`/user/profile/${result.user._id}`]);
+        const token = result.token;
+        const decoded = jwt_decode(token);
+        const user = decoded["data"];
 
-        let usLogin = JSON.stringify(result.user);
-        localStorage.setItem(ACCESS_TOKEN, result.token);
+        this.router.navigate([`/user/profile/${user._id}`]);
+
+        let usLogin = JSON.stringify(user);
+        localStorage.setItem(ACCESS_TOKEN, token);
         localStorage.setItem(USER_LOGIN, usLogin);
 
-        // this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Đăng nhập thành công!', life: 3000 })
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Đăng nhập thành công!', life: 3000 })
       },
       error: err => {
         console.log({ err });

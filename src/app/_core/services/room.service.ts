@@ -15,7 +15,7 @@ export class RoomService {
   }
 
   layDanhSachPhongTheoViTri(locationId: string): Observable<any> {
-    let ob = this.httpClient.get(`${DOMAIN}/api/rooms?locationId=${locationId}`);
+    let ob = this.httpClient.get(`${DOMAIN}/api/rooms/by-location?locationId=${locationId}`);
     return ob;
   }
 

@@ -23,7 +23,7 @@ export class LocationService {
     return ob;
   }
 
-  capNhatThongTinViTri(id: string, location: Location) {
+  capNhatThongTinViTri(id: string, location: Location): Observable<any> {
     let ob = this.httpClient.put(`${DOMAIN}/api/locations/${id}`, location);
     return ob;
   }

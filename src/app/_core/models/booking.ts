@@ -1,5 +1,6 @@
 export interface Booking {
   roomId?: string,
   checkIn?: Date,
-  checkOut?: Date
+  checkOut?: Date,
+  totalPrice?: Number
 }

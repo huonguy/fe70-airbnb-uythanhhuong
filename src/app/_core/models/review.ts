@@ -1,8 +1,10 @@
 import { User } from "./user";
 
 export interface Review {
+  _id: string,
   content: string,
-  created_at: Date;
-  updatedAt: Date,
-  userId: User
+  createdDate: Date,
+  userId: string,
+  userAvatar: string,
+  userName: string,
 }

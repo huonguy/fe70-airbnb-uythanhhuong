@@ -4,10 +4,15 @@
     margin: 0 auto 2rem auto;
     display: block;
   }
+
+  .ng-invalid .p-dropdown {
+      border-left: 5px solid red;;
+    }
+
 }
 
 form {
-  .ng-invalid {
+  #name.ng-invalid {
     border-left: 5px solid red;
   }
 }

@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs';
 import { Room } from 'src/app/_core/models/room';
 import { SearchInfo, searchInfo } from 'src/app/_core/models/search-info';
 import { GoogleMapService } from 'src/app/_core/services/google-map.service';
+import { LocationService } from 'src/app/_core/services/location.service';
 import { RoomService } from 'src/app/_core/services/room.service';
 import { GOOGLE_MAPS_KEY } from 'src/app/_core/util/config';
 import { Destroyable } from '../../_directives/Destroyable.directive';
@@ -17,6 +18,8 @@ import { Destroyable } from '../../_directives/Destroyable.directive';
 })
 export class RoomListComponent extends Destroyable implements OnInit {
   locationId: string = '';
+  locationName: string = '';
+  provinceName: string = '';
 
   arrRoom: Room[];
   updatedArrRoom: Room[];
@@ -46,7 +49,7 @@ export class RoomListComponent extends Destroyable implements OnInit {
   @ViewChild('map') mapEle: any;
   map: google.maps.Map;
 
-  constructor(private atvRoute: ActivatedRoute, private roomService: RoomService, private router: Router, private googleMapService: GoogleMapService, private cookie: CookieService) {
+  constructor(private atvRoute: ActivatedRoute, private locationService: LocationService, private roomService: RoomService, private router: Router, private googleMapService: GoogleMapService, private cookie: CookieService) {
     super()
   }
 
@@ -62,18 +65,19 @@ export class RoomListComponent extends Destroyable implements OnInit {
     this.roomService.layDanhSachPhongTheoViTri(this.locationId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
         console.log('danh sach phong theo vi tri', result);
-        this.arrRoom = result;
+        this.arrRoom = result.rooms;
         this.updatedArrRoom = [...this.arrRoom];
 
-        if (this.arrRoom.length > 0) {
-          console.log('location name', this.arrRoom[0].locationId.name)
-          this.loadMap(this.arrRoom[0].locationId.name + ',' + this.arrRoom[0].locationId.province);
-        }
+        this.locationName = result.location;
+        this.provinceName = result.province;
+
+        this.loadMap(this.locationName + ',' + this.provinceName);
       },
       error: err => {
         console.log({ err })
       }
     })
+
   }
 
   goRoomDetail(roomDetail: Room): void {
@@ -82,7 +86,6 @@ export class RoomListComponent extends Destroyable implements OnInit {
 
   loadMap(locationName: string): void {
     this.googleMapService.getGeoCode(locationName).then((res: any) => {
-      console.log('getGeoCode', res);
       this.location = res;
 
       // load the google map on the browser

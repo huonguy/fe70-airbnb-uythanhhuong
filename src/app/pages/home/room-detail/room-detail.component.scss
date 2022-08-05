@@ -95,7 +95,7 @@ hr {
 
 cdk-virtual-scroll-viewport {
   height: 400px;
-  }
+}
 
 :host ::ng-deep .p-inputnumber-buttons-horizontal .p-inputnumber-input {
   width: 70px !important;
@@ -111,5 +111,14 @@ cdk-virtual-scroll-viewport {
 
   &:hover {
     background: rgb(247, 247, 247) !important;
+  }
+}
+
+.btn-review {
+  transition: all .2s;
+
+  &:hover {
+    opacity: .6;
+    transform: scale(1.5);
   }
 }

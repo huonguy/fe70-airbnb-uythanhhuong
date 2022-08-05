@@ -9,6 +9,7 @@ import { Room } from 'src/app/_core/models/room';
 import { SearchInfo, searchInfo } from 'src/app/_core/models/search-info';
 import { ReviewService } from 'src/app/_core/services/review.service';
 import { RoomService } from 'src/app/_core/services/room.service';
+import { USER_LOGIN } from 'src/app/_core/util/config';
 import { Destroyable } from '../../_directives/Destroyable.directive';
 
 
@@ -34,6 +35,9 @@ export class RoomDetailComponent extends Destroyable implements OnInit {
   pageUrl: string = ''
   pageTitle: string = '';
 
+  urReview: string = '';
+  userId: string = '';
+
   constructor(private atvRoute: ActivatedRoute, private messageService: MessageService, private roomService: RoomService, private reviewService: ReviewService, private cookie: CookieService) {
     super()
   }
@@ -47,13 +51,12 @@ export class RoomDetailComponent extends Destroyable implements OnInit {
 
     this.atvRoute.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.roomId = params['id'];
-      // console.log('roomId', this.roomId);
     })
 
     // láy thong tin chi tiết phòng
     this.roomService.layThongTinChiTietPhong(this.roomId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('thong tin chi tiet phong', result);
+        // console.log('thong tin chi tiet phong', result);
         this.roomDetail = result;
       },
       error: err => {
@@ -71,6 +74,9 @@ export class RoomDetailComponent extends Destroyable implements OnInit {
         console.log({ err });
       }
     })
+
+    if (localStorage.getItem(USER_LOGIN))
+      this.userId = JSON.parse(localStorage.getItem(USER_LOGIN))._id;
   }
 
   clickShowMore(): void {
@@ -112,5 +118,38 @@ export class RoomDetailComponent extends Destroyable implements OnInit {
     var top = (screen.height - height) / 2;
     var params = "menubar=no,toolbar=no,status=no,width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
     window.open(url, "", params);
+  }
+
+  addUrReview(): void {
+    this.reviewService.taoMoiDanhGia(this.roomId, this.urReview).subscribe({
+      next: result => {
+        this.urReview = '';
+        this.arrReview.push(result.review);
+        this.arrReview = [...this.arrReview];
+
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: result.message, life: 3000 })
+
+      },
+      error: err => {
+        console.log({ err })
+      }
+    })
+  }
+
+  cancelReview(): void {
+    this.urReview = "";
+  }
+
+  deleteUrReview(reviewId: string): void {
+    this.reviewService.xoaDanhGia(reviewId).subscribe({
+      next: result => {
+        this.arrReview = this.arrReview.filter(review => review._id !== reviewId);
+
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
+      },
+      error: err => {
+        console.log({ err })
+      }
+    })
   }
 }

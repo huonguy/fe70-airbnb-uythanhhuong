@@ -9,5 +9,6 @@ export interface User {
   gender?: string,
   address?: string,
   avatar?: string,
-  type?: string,
+  roleId?: number,
+  type?: string
 }

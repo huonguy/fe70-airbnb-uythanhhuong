@@ -6,7 +6,8 @@ interface ITicket {
   checkIn?: Date;
   checkOut?: Date;
   userId?: User;
-  roomId?: Room
+  roomId?: Room;
+  totalPrice?: number;
 }
 
 export class Ticket implements ITicket {
@@ -15,6 +16,7 @@ export class Ticket implements ITicket {
   public checkOut: Date = new Date();
   public userId: User;
   public roomId?: Room;
+  public totalPrice?: number = 0;
 
   constructor() {
   }

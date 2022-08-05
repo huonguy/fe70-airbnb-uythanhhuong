@@ -1,5 +1,3 @@
-import { Location } from "./location";
-
 export interface Room {
   _id?: string,
   name?: string,
@@ -15,9 +13,12 @@ export interface Room {
   wifi?: boolean,
   heating?: boolean,
   cableTV?: boolean,
-  locationId?: Location,
+  locationId?: string,
   image?: string,
   bath?: number,
   bedRoom?: number,
   guests?: number,
+  valueate?: number,
+  location?: string,
+  province?: string
 }

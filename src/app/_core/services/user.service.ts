@@ -31,8 +31,8 @@ export class UserService {
     return ob;
   }
 
-  layDanhSachNguoiDungPhanTrang(): Observable<any> {
-    let ob = this.httpClient.get(`${DOMAIN}/api/users/pagination`);
+  layDanhSachNguoiDung(): Observable<any> {
+    let ob = this.httpClient.get(`${DOMAIN}/api/users`);
     return ob;
   }
 

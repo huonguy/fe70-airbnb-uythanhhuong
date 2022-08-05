@@ -51,17 +51,17 @@ export class ReservePanelComponent extends Destroyable implements OnInit {
     this.bookingInfo = {
       roomId: this.roomDetail._id,
       checkIn: this.checkIn,
-      checkOut: this.checkOut
+      checkOut: this.checkOut,
+      totalPrice: this.roomDetail?.price * this.calculateDiff(this.checkIn, this.checkOut) + this.serviceFee,
     };
 
     this.roomService.datPhong(this.bookingInfo).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('dat phong', result);
 
         this.confirmationService.confirm({
           message: 'Bạn có muốn tiếp tục trải nghiệm với những phòng khác?',
           header: 'Đặt phòng thành công.',
-          icon: 'pi pi-info-circle',
+          icon: 'pi pi-check',
           acceptLabel: 'Có',
           rejectLabel: 'Không',
           accept: () => {

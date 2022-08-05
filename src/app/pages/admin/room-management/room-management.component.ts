@@ -7,6 +7,7 @@ import { Room } from 'src/app/_core/models/room';
 import { LocationService } from 'src/app/_core/services/location.service';
 import { RoomService } from 'src/app/_core/services/room.service';
 import { Destroyable } from '../../_directives/Destroyable.directive';
+import { amenities } from 'src/app/_core/constants/amenities';
 
 @Component({
   selector: 'app-room-management',
@@ -36,9 +37,26 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
 
   ngOnInit(): void {
     this.roomService.layDanhSachPhong().pipe(takeUntil(this.destroy$)).subscribe({
-      next: result => {
-        console.log('danh sach phong', result);
+      next: (result) => {
+        result = result.map(res => {
+          return {
+            ...res,
+            elevator: (res.elevator == 1) ? true : false,
+            hotTub: (res.hotTub == 1) ? true : false,
+            pool: (res.pool == 1) ? true : false,
+            indoorFireplace: (res.indoorFireplace == 1) ? true : false,
+            dryer: (res.dryer == 1) ? true : false,
+            gym: (res.gym == 1) ? true : false,
+            kitchen: (res.kitchen == 1) ? true : false,
+            wifi: (res.wifi == 1) ? true : false,
+            heating: (res.heating == 1) ? true : false,
+            cableTV: (res.cableTV == 1) ? true : false,
+          }
+        })
+
         this.arrRoom = result;
+        console.log(this.arrRoom);
+
       },
       error: err => {
         console.log({ err });
@@ -48,7 +66,7 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
 
     this.locationService.layDanhSachViTri().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        this.arrLocation = result;
+        this.arrLocation = result.map((r) => { return { "label": r.name, "value": r._id } });;
       },
       error: err => {
         console.log({ err });
@@ -71,7 +89,6 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
 
     this.roomService.layThongTinChiTietPhong(roomId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('thong tin chi tiet phong', result);
         this.room = result;
       },
       error: err => {
@@ -85,7 +102,9 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
     this.headerDialog = "Chỉnh sửa phòng";
     this.actionBtnDialog = 'Cập nhật';
 
+
     this.room = { ...room };
+    console.log(this.room)
     this.roomDialog = true;
   }
 
@@ -99,10 +118,9 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
       accept: () => {
         this.roomService.xoaPhong(room._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('xoa phong', result);
             this.arrRoom = this.arrRoom.filter(val => val._id !== room._id);
             this.room = {};
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -117,18 +135,14 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
     this.submitted = true;
 
     if (this.room._id) {
-      console.log('thong tin thay doi', this.room);
       let roomIndex = this.arrRoom.findIndex(r => r._id === this.room._id);
       if (roomIndex !== -1) {
         this.roomService.capNhatThongTinPhong(this.room._id, this.room).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('cap nhat phong', result);
-
-            result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
-            this.arrRoom[roomIndex] = result;
+            this.arrRoom[roomIndex] = result.room;
             this.arrRoom = [...this.arrRoom];
 
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -138,15 +152,13 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
       }
     }
     else {
+      console.log(this.room)
       this.roomService.taoPhong(this.room).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
-          console.log('tạo phòng', result);
-
-          result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
-          this.arrRoom.push(result);
+          this.arrRoom.push(result.room);
           this.arrRoom = [...this.arrRoom];
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
         },
         error: err => {
           console.log({ err });
@@ -173,14 +185,9 @@ export class RoomManagementComponent extends Destroyable implements OnInit {
     if (roomIndex !== -1) {
       this.roomService.capNhatAnhPhong(this.fileToUpload, roId).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
-          console.log('cap nhat anh phong', result);
+          this.arrRoom[roomIndex] = result.room;
 
-          result.locationId = this.arrLocation.find(loc => loc._id === result.locationId);
-          this.arrRoom[roomIndex] = result;
-          this.arrRoom = [...this.arrRoom];
-
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật ảnh thành công.', life: 3000 });
-
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
         },
         error: err => {
           console.log({ err });

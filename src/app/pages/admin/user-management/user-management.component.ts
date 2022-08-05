@@ -33,9 +33,8 @@ export class UserManagementComponent extends Destroyable implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.layDanhSachNguoiDungPhanTrang().pipe(takeUntil(this.destroy$)).subscribe({
+    this.userService.layDanhSachNguoiDung().pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('danh sach nguoi dung', result);
         this.arrUser = result;
       },
       error: err => {
@@ -60,7 +59,6 @@ export class UserManagementComponent extends Destroyable implements OnInit {
 
     this.userService.layThongtinNguoiDung(userId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('thong tin nguoi dung', result);
         this.user = result;
       },
       error: err => {
@@ -88,10 +86,9 @@ export class UserManagementComponent extends Destroyable implements OnInit {
       accept: () => {
         this.userService.xoaNguoiDung(user._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('xoa nguoi dung', result);
             this.arrUser = this.arrUser.filter(val => val._id !== user._id);
             this.user = {};
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công!', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -116,11 +113,10 @@ export class UserManagementComponent extends Destroyable implements OnInit {
       if (userIndex !== -1) {
         this.userService.capNhatNguoiDung(this.user._id, this.user).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('cap nhat nguoi dung', result);
-            this.arrUser[userIndex] = result;
+            this.arrUser[userIndex] = result.user;
             this.arrUser = [...this.arrUser];
 
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -132,11 +128,10 @@ export class UserManagementComponent extends Destroyable implements OnInit {
     else {
       this.userService.taoNguoiDung(this.user).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
-          console.log('tạo người dùng', result);
-          this.arrUser.push(result);
+          this.arrUser.push(result.user);
           this.arrUser = [...this.arrUser];
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
         },
         error: err => {
           console.log({ err });

@@ -6,6 +6,8 @@ import { UserService } from 'src/app/_core/services/user.service';
 import { NgForm } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Destroyable } from '../../_directives/Destroyable.directive';
+import { ReviewService } from 'src/app/_core/services/review.service';
+import { Review } from 'src/app/_core/models/review';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,21 +24,22 @@ export class UserProfileComponent extends Destroyable implements OnInit {
   noAvatar: string = '../../../../assets/images/no-profile-picture.png';
   editUserForm: boolean = false;
 
+  arrReview: Review[];
+
   @ViewChild('editForm') editForm!: NgForm;
 
-  constructor(private atvRoute: ActivatedRoute, private messageService: MessageService, private userService: UserService) {
+  constructor(private atvRoute: ActivatedRoute, private messageService: MessageService, private userService: UserService, private reviewService: ReviewService) {
     super()
   }
 
   ngOnInit(): void {
     this.atvRoute.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.userId = params['id'];
-      // console.log(this.userId)
+      console.log(this.userId)
     })
 
     this.userService.layThongtinNguoiDung(this.userId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        // console.log('user detail', result);
         this.userDetails = result;
       },
       error: err => {
@@ -51,9 +54,9 @@ export class UserProfileComponent extends Destroyable implements OnInit {
 
     this.userService.capNhatAnhNguoiDung(this.fileToUpload).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        this.userDetails = result;
+        this.userDetails = result.user;
 
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật ảnh thành công!', life: 3000 })
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 })
       },
       error: err => {
         console.log({ err })
@@ -84,3 +87,4 @@ export class UserProfileComponent extends Destroyable implements OnInit {
     })
   }
 }
+

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { LoginComponent } from './login/login.component';
@@ -13,6 +14,8 @@ import { HomeModule } from '../home/home.module';
 import { RouterModule, Routes } from '@angular/router'
 import { PrimengModule } from 'src/app/_core/common/_modules/primeng/primeng.module';
 import { isLoginGuard } from 'src/app/_core/services/Guard/isLogin.guard';
+
+
 
 const userRoute: Routes = [
   {
@@ -36,6 +39,7 @@ const userRoute: Routes = [
     FormsModule,
     HomeModule,
     PrimengModule,
+    ScrollingModule,
     RouterModule.forChild(userRoute)
   ],
   exports: [

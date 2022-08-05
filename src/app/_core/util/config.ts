@@ -3,7 +3,8 @@ export const ACCESS_TOKEN: string = 'accessToken';
 export const USER_LOGIN: string = 'userLogin';
 
 //domain backend
-export const DOMAIN = "https://airbnb.cybersoft.edu.vn";
+// export const DOMAIN = "https://airbnb.cybersoft.edu.vn";
+export const DOMAIN = "http://localhost:3000";
 //tslint
 
 

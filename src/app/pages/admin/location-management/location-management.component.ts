@@ -2,8 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { takeUntil } from 'rxjs';
+import { Country } from 'src/app/_core/models/country';
 import { Location } from 'src/app/_core/models/location';
+import { Province } from 'src/app/_core/models/province';
+import { CountryService } from 'src/app/_core/services/country.service';
 import { LocationService } from 'src/app/_core/services/location.service';
+import { ProvinceService } from 'src/app/_core/services/province.service';
 import { Destroyable } from '../../_directives/Destroyable.directive';
 
 @Component({
@@ -25,9 +29,13 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
   arrLocation!: Location[];
   location!: Location;
 
+  countries: any[];
+  provinces: any[];
+
   @ViewChild('dt') dt: Table | undefined;
 
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private locationService: LocationService) {
+  constructor(private messageService: MessageService, private confirmationService: ConfirmationService, private locationService: LocationService,
+    private countryService: CountryService, private provinceService: ProvinceService) {
     super()
   }
 
@@ -36,6 +44,27 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
       next: result => {
         console.log('danh sach vi tri', result);
         this.arrLocation = result;
+      },
+      error: err => {
+        console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
+      }
+    })
+
+    this.countryService.layDanhSachQuocGia().pipe(takeUntil(this.destroy$)).subscribe({
+      next: result => {
+        this.countries = result.map((r) => { return { "label": r.name, "value": r._id } });
+      },
+      error: err => {
+        console.log({ err });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message, life: 3000 });
+
+      }
+    })
+
+    this.provinceService.layDanhSachTinh().pipe(takeUntil(this.destroy$)).subscribe({
+      next: result => {
+        this.provinces = result.map((r) => { return { "label": r.name, "value": r._id } });
       },
       error: err => {
         console.log({ err });
@@ -58,7 +87,6 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
 
     this.locationService.layThongTinChiTietViTri(locationId).pipe(takeUntil(this.destroy$)).subscribe({
       next: result => {
-        console.log('thong tin chi tiet vi tri', result);
         this.location = result;
       },
       error: err => {
@@ -86,10 +114,9 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
       accept: () => {
         this.locationService.xoaViTri(location._id).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('xoa vi tri', result);
             this.arrLocation = this.arrLocation.filter(val => val._id !== location._id);
             this.location = {};
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Xóa thành công', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -108,11 +135,10 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
       if (locationIndex !== -1) {
         this.locationService.capNhatThongTinViTri(this.location._id, this.location).pipe(takeUntil(this.destroy$)).subscribe({
           next: result => {
-            console.log('cap nhat vi tri', result);
-            this.arrLocation[locationIndex] = result;
+            this.arrLocation[locationIndex] = result.location;
             this.arrLocation = [...this.arrLocation];
 
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Sửa thành công.', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
           },
           error: err => {
             console.log({ err });
@@ -124,11 +150,10 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
     else {
       this.locationService.taoViTri(this.location).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
-          console.log('tao vi tri', result);
-          this.arrLocation.push(result);
+          this.arrLocation.push(result.location);
           this.arrLocation = [...this.arrLocation];
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Tạo thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
         },
         error: err => {
           console.log({ err });
@@ -155,12 +180,9 @@ export class LocationManagementComponent extends Destroyable implements OnInit {
     if (locationIndex !== -1) {
       this.locationService.capNhatAnhViTri(this.fileToUpload, locId).pipe(takeUntil(this.destroy$)).subscribe({
         next: result => {
-          console.log('cap nhat anh vi tri', result);
+          this.arrLocation[locationIndex] = result.location;
 
-          this.arrLocation[locationIndex] = result;
-          this.arrLocation = [...this.arrLocation];
-
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cập nhật ảnh thành công.', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: `${result.message}`, life: 3000 });
         },
         error: err => {
           console.log({ err });

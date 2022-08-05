@@ -20,7 +20,7 @@
         <th pSortableColumn="name">Tên phòng <p-sortIcon field="name"></p-sortIcon>
         </th>
         <th>Hình ảnh</th>
-        <th pSortableColumn="locationId.province">Địa điểm <p-sortIcon field="locationId.province"></p-sortIcon>
+        <th pSortableColumn="locationId">Địa điểm <p-sortIcon field="locationId"></p-sortIcon>
         </th>
         <th pSortableColumn="guests">Số khách <p-sortIcon field="guests"></p-sortIcon>
         </th>
@@ -41,9 +41,11 @@
             <input class="hidden" type="file" id="newPhoto" accept="image/*" (change)="updateImage($event, ro._id)" />
           </label>
         </td>
-        <td>{{ro.locationId?.name}}<br />
-          <small class="text-muted">{{ro.locationId?.province}}</small>
-        </td>
+        <ng-container *ngFor="let location of arrLocation">
+          <td *ngIf="location.value === ro.locationId">
+            {{location.label}}
+          </td>
+        </ng-container>
         <td>{{ro.guests}}</td>
         <td>
           <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
@@ -105,64 +107,62 @@
       <div class="field">
         <label class="mb-3">Tiện nghi</label>
         <div class="formgrid grid">
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="elevator" name="elevator" [value]=false [(ngModel)]="room.elevator"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="elevator" [binary]="true" [(ngModel)]="room.elevator" inputId="elevator"></p-checkbox>
             <label for="elevator">Thang máy</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="hotTub" name="hotTub" [value]=false [(ngModel)]="room.hotTub"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="hotTub" [binary]="true" [(ngModel)]="room.hotTub" inputId="hotTub"></p-checkbox>
             <label for="hotTub">Bồn nước nóng</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="pool" name="pool" [value]=false [(ngModel)]="room.pool"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="pool" [binary]="true" [(ngModel)]="room.pool" inputId="pool"></p-checkbox>
             <label for="pool">Hồ bơi</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="indoorFireplace" name="indoorFireplace" [value]=false [(ngModel)]="room.indoorFireplace">
-            </p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="indoorFireplace" [binary]="true" [(ngModel)]="room.indoorFireplace"
+              inputId="indoorFireplace"></p-checkbox>
             <label for="indoorFireplace">Lò sưởi trong nhà</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="dryer" name="dryer" [value]=false [(ngModel)]="room.dryer"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="dryer" [binary]="true" [(ngModel)]="room.dryer" inputId="dryer"></p-checkbox>
             <label for="dryer">Máy sấy khô</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="gym" name="gym" [value]=false [(ngModel)]="room.gym"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="gym" [binary]="true" [(ngModel)]="room.gym" inputId="gym"></p-checkbox>
             <label for="gym">Phòng thể dục</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="kitchen" name="kitchen" [value]=false [(ngModel)]="room.kitchen"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="kitchen" [binary]="true" [(ngModel)]="room.kitchen" inputId="kitchen"></p-checkbox>
             <label for="kitchen">Nhà bếp</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="wifi" name="wifi" [value]=false [(ngModel)]="room.wifi"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="wifi" [binary]="true" [(ngModel)]="room.wifi" inputId="wifi"></p-checkbox>
             <label for="wifi">Wifi</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="heating" name="heating" [value]=false [(ngModel)]="room.heating"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="heating" [binary]="true" [(ngModel)]="room.heating" inputId="heating"></p-checkbox>
             <label for="heating">Máy làm nóng</label>
           </div>
-          <div class="field-radiobutton col-6">
-            <p-radioButton id="cableTV" name="cableTV" [value]=false [(ngModel)]="room.cableTV"></p-radioButton>
+          <div class="field-checkbox col-6">
+            <p-checkbox name="cableTV" [binary]="true" [(ngModel)]="room.cableTV" inputId="cableTV"></p-checkbox>
             <label for="cableTV">Truyền hình cáp</label>
           </div>
         </div>
       </div>
       <div class="field">
         <label for="locationId">Địa điểm</label>
-        <p-dropdown dataKey="name" [options]="arrLocation" [(ngModel)]="room.locationId" [filter]="true" filterBy="name"
-          [showClear]="true" placeholder="Chọn địa điểm" name="locationId">
-          <ng-template let-item pTemplate="selectedItem">
-            <span>{{item.name}}</span><br />
-            <small class="text-muted">{{item.province}}</small>
-          </ng-template>
-          <ng-template let-location pTemplate="item">
-            <div>
-              <span>{{location.name}}</span><br />
-              <small class="text-muted">{{location.province}}</small>
-            </div>
+        <p-dropdown [(ngModel)]="room.locationId" inputId="locationId" [options]="arrLocation"
+          placeholder="Chọn địa điểm" name="locationId">
+          <ng-template let-option pTemplate="item">
+            <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
           </ng-template>
         </p-dropdown>
+      </div>
+      <div class="field">
+        <label for="valueate">Đánh giá</label>
+        <p-inputNumber id="valueate" [(ngModel)]="room.valueate" name="valueate">
+        </p-inputNumber>
       </div>
       <div class="d-flex justify-content-center">
         <button [disabled]="roomForm.invalid" type="submit" pButton pRipple [label]="actionBtnDialog"
@@ -190,7 +190,7 @@
         <p class="card-text">Giá tiền : <span class="text-muted">{{room?.price | number}} VND</span> </p>
         <p class="card-text">Tiện nghi :</p>
         <div class="d-flex flex-wrap mb-3">
-          <p class="card-text me-3 text-muted" *ngIf=" room?.elevator">Thang máy</p>
+          <p class="card-text me-3 text-muted" *ngIf="room?.elevator">Thang máy</p>
           <p class="card-text me-3 text-muted" *ngIf="room?.hotTub">Bồn nước nóng</p>
           <p class="card-text me-3 text-muted" *ngIf="room?.pool">Hồ bơi</p>
           <p class="card-text me-3 text-muted" *ngIf="room?.indoorFireplace">Lò sưởi trong nhà</p>
@@ -201,9 +201,12 @@
           <p class="card-text me-3 text-muted" *ngIf="room?.heating">Máy làm nóng</p>
           <p class="card-text me-3 text-muted" *ngIf="room?.cableTV">Truyền hình cáp</p>
         </div>
-        <p class="card-text">Địa điểm : <span class="text-muted">{{room?.locationId?.name}},
-            {{room?.locationId?.province}},
-            {{room?.locationId.country}}</span></p>
+        <p class="card-text">Địa điểm :
+          <span class="text-muted">
+            {{room?.location}} - {{room?.province}}
+          </span>
+        </p>
+        <p class="card-text">Đánh giá: <span class="text-muted">{{room?.valueate}}</span></p>
       </div>
     </div>
     <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>

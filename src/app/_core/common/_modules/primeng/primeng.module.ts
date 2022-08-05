@@ -23,6 +23,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { PasswordModule } from "primeng/password";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { InputMaskModule } from 'primeng/inputmask';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [],
@@ -49,7 +52,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TooltipModule,
     RadioButtonModule,
     PasswordModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    InputMaskModule,
+    CheckboxModule,
+    InputTextareaModule
   ],
   exports: [
     CalendarModule,
@@ -74,7 +80,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TooltipModule,
     RadioButtonModule,
     PasswordModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    InputMaskModule,
+    CheckboxModule,
+    InputTextareaModule
   ],
   providers: [
     MessageService,

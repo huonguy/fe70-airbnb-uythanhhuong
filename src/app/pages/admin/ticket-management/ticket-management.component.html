@@ -1,0 +1,78 @@
+<p-toast></p-toast>
+<div class="card mt-4 border-top-0">
+  <p-table #dt [value]="arrTicket" [rows]="10" [paginator]="true" [globalFilterFields]="['_id']"
+    responsiveLayout="scroll" [rowHover]="true" dataKey="_id"
+    currentPageReportTemplate="Hiển thị {first} đến {last} trong số {totalRecords} phòng"
+    [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input style="width: 300%;" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Nhập vào mã đặt phòng" />
+      </span>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="_id">Mã đặt phòng <p-sortIcon field="_id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="roomId">Mã phòng <p-sortIcon field="roomId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="checkIn">Ngày nhận phòng <p-sortIcon field="checkIn"></p-sortIcon>
+        </th>
+        <th pSortableColumn="checkOut">Ngày trả phòng <p-sortIcon field="checkOut"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ticket>
+      <tr>
+        <td data-bs-toggle="tooltip" data-bs-placement="bottom" [title]="">
+          {{ticket?._id}}
+        </td>
+        <td>{{ticket?.roomId }}</td>
+        <td>{{ticket?.checkIn | date : 'yyyy-MM-dd'}}</td>
+        <td>{{ticket?.checkOut| date : 'yyyy-MM-dd'}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-info" pTooltip="Chi tiết"
+            class="p-button-rounded p-button-primary me-2 my-1" (click)="viewDetailTicket(ticket._id)"></button>
+          <button pButton pRipple icon="pi pi-trash" pTooltip="Xóa" class="p-button-rounded p-button-warning my-1"
+            (click)="deleteTicket(ticket)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      Tổng cộng có {{arrTicket ? arrTicket.length : 0}} thông tin đặt phòng.
+    </ng-template> -->
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="viewDetailDialog" [style]="{width: '450px'}" header="Thông tin đặt phòng" [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="card mb-3" style="border: 0;">
+      <!-- <img [src]="user?.avatar || imageDefault" class="card-img-top" alt="room.image"> -->
+      <div class="card-body">
+        <p class="card-text">Mã đặt phòng : <span class="text-muted">{{ticket?._id}}</span> </p>
+        <p class="card-text">Ngày nhận phòng : <span class="text-muted">{{ticket?.checkIn | date: 'yyyy-MM-dd'}}</span>
+        </p>
+        <p class="card-text">Ngày trả phòng : <span class="text-muted">{{ticket?.checkOut | date: 'yyyy-MM-dd'}}</span>
+        </p>
+        <p class="card-text">Tổng tiền : <span class="text-muted">{{ticket?.totalPrice | number}} VNĐ</span>
+        </p>
+        <p class="card-text d-flex flex-column">
+          <span><i class="fa fa-bed" aria-hidden="true"></i> Phòng</span>
+          <span class="text-muted">Mã phòng: {{ticket?.roomId._id}}</span>
+          <span class="text-muted">Tên phòng: {{ticket?.roomId.name}}</span>
+        </p>
+        <p class="card-text d-flex flex-column">
+          <span><i class="fa fa-user" aria-hidden="true"></i> Tài khoản</span>
+          <span class="text-muted">Mã người dùng: {{ticket?.userId._id}}</span>
+          <span class="text-muted">Email: {{ticket?.userId.email}}</span>
+        </p>
+      </div>
+    </div>
+    <button type="button" pButton pRipple label="Thoát" class="p-button-text" (click)="hideDialog()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
